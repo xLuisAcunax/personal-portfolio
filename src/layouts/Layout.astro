@@ -39,22 +39,46 @@ const { title = "Luis — Portfolio", description = "Software Developer" } =
   </head>
   <body class="min-h-dvh bg-neutral-950 text-neutral-100 antialiased">
     <header
-      class="fixed inset-x-0 top-0 z-50 h-[var(--header-h)]
-                   flex items-center justify-between px-6 backdrop-blur-md/0 transition
-                   data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:bg-neutral-950/50"
-    >
-      <a href="/" class="font-semibold">luis-acuna.dev</a>
-      <nav class="flex gap-6 text-sm">
-        <a href="#experiencia" class="opacity-80 hover:text-yellow-200"
-          >Experiencia</a
-        >
-        <a href="#proyectos" class="opacity-80 hover:text-yellow-200">Proyectos</a>
-        <a href="#contacto" class="opacity-80 hover:text-yellow-200">Contacto</a>
-		<a href="/cv" class="opacity-80 hover:hover:text-yellow-200">CV</a>
-      </nav>
+      class="fixed inset-x-0 top-0 z-50
+            h-14 sm:h-[var(--header-h)]
+            flex items-center px-6 transition
+            data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:bg-neutral-950/50">
+      <div class="mx-auto max-w-5xl w-full flex items-center justify-between gap-3">
+        <!-- BRAND: evita salto en el guion -->
+        <a href="/" class="font-semibold text-base whitespace-nowrap">luis-acuna.dev</a>
+
+        <!-- NAV DESKTOP -->
+        <nav class="hidden sm:flex gap-6 text-sm">
+          <a href="#experiencia" class="opacity-80 hover:text-yellow-200">Experiencia</a>
+          <a href="#proyectos"   class="opacity-80 hover:text-yellow-200">Proyectos</a>
+          <a href="#contacto"    class="opacity-80 hover:text-yellow-200">Contacto</a>
+          <a href="/cv"          class="opacity-80 hover:text-yellow-200">CV</a>
+        </nav>
+
+        <!-- HAMBURGUESA (solo móvil) -->
+        <button id="menuBtn"
+                class="sm:hidden inline-flex items-center justify-center rounded-md border border-neutral-800 px-3 py-2 text-sm"
+                aria-label="Abrir menú" aria-expanded="false">
+          ☰
+        </button>
+      </div>
+
+      <!-- MENÚ MÓVIL -->
+      <div id="mobileMenu"
+          class="sm:hidden fixed inset-x-0 top-14
+                  bg-neutral-950/95 border-t border-neutral-800
+                  opacity-0 -translate-y-2 pointer-events-none transition
+                  data-[open=true]:opacity-100 data-[open=true]:translate-y-0 data-[open=true]:pointer-events-auto">
+        <nav class="mx-auto max-w-5xl px-6 py-3 grid gap-2 text-base">
+          <a href="#experiencia" class="py-2 opacity-90 hover:text-yellow-200">Experiencia</a>
+          <a href="#proyectos"   class="py-2 opacity-90 hover:text-yellow-200">Proyectos</a>
+          <a href="#contacto"    class="py-2 opacity-90 hover:text-yellow-200">Contacto</a>
+          <a href="/cv"          class="py-2 opacity-90 hover:text-yellow-200">CV</a>
+        </nav>
+      </div>
     </header>
 
-    <main class="pt-[var(--header-h)]">
+    <main class="pt-14 sm:pt-[var(--header-h)]">
       <slot />
     </main>
 
@@ -65,6 +89,20 @@ const { title = "Luis — Portfolio", description = "Software Developer" } =
         header?.setAttribute("data-scrolled", window.scrollY > 10);
       onScroll();
       addEventListener("scroll", onScroll, { passive: true });
+
+      const btn = document.getElementById("menuBtn");
+      const menu = document.getElementById("mobileMenu");
+      btn?.addEventListener("click", () => {
+        const open = menu.getAttribute("data-open") === "true";
+        menu.setAttribute("data-open", String(!open));
+        btn.setAttribute("aria-expanded", String(!open));
+      });
+      menu?.addEventListener("click", (e) => {
+        const a = e.target.closest("a");
+        if (!a) return;
+        menu.setAttribute("data-open", "false");
+        btn.setAttribute("aria-expanded", "false");
+      });
     </script>
   </body>
 </html>

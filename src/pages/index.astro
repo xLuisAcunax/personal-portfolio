@@ -35,17 +35,23 @@ const chipColors = [
 
 <Layout title="Luis Acuña— Software Developer">
   <!-- HERO con parallax real y rendimiento -->
-  <section class="relative overflow-hidden">
+  <section class="relative overflow-hidden min-h-[85svh] sm:min-h-[86svh]">
     <!-- Capa fondo (parallax lento) -->
     <div id="bg" class="absolute inset-0 -z-10">
-      <!-- Imagen controlada -->
-      <img
-		src="/about-me.png" alt=""
-		class="pointer-events-none select-none absolute top-1/2 -translate-y-1/2
-         left-[5vw] sm:left-[0vw] md:left-[11vw]   
-         h-[180%] sm:h-[190%] md:h-[125%] w-auto          
-         object-contain"/>
-
+		<!-- Imagen controlada -->
+		<picture class="pointer-events-none select-none absolute top-1/2 -translate-y-1/2
+                
+				min-[1921px]:right-[10vw] min-[1921px]:w-[80%]
+				max-[1920px]:right-[10vw] max-[1920px]:w-[80%]
+				max-[1190px]:right-[-12vw] max-[1190px]:w-[130%]
+				max-[930px]:right-[-18vw] max-[930px]:w-[185%] 
+				max-[430px]:right-[-18vw] max-[430px]:w-[230%]
+				max-[360px]:right-[-8vw] max-[360px]:w-[100%]">
+			<!-- Solo cargar la foto en >= 360px -->
+			<source media="(min-width: 360px)" srcset="/about-me.png" />
+			<!-- Fallback 1x1 transparente para móviles -->
+			<img alt="" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" class="w-full h-auto object-contain" />
+		</picture>
       <!-- Gradiente por encima de la foto -->
       <div
         class="absolute inset-0 z-10"
@@ -55,15 +61,19 @@ const chipColors = [
     </div>
 
     <!-- Contenido -->
-    <div class="mx-auto max-w-5xl px-6 py-32 md:py-44">
+    <div class="mx-auto max-w-5xl px-6
+            pt-[48svh] pb-0
+			max-[359px]:pt-0 max-[359px]:pb-0 max-[359px]:py-32 
+
+            min-[1190px]:py-44">
       <h1
         class="text-5xl md:text-7xl font-semibold tracking-tight leading-[0.95]"
       >
         Luis Acuña
       </h1>
       <h2 class="rol inline-block will-change-transform
-           text-[9.5vw] sm:text-2xl md:text-4xl font-semibold leading-tight">
-		   Full-Stack Developer
+           text-[clamp(12px,5vw,52px)] sm:text-2xl md:text-3xl font-semibold leading-tight">
+		Full-Stack Developer
 	  </h2>
       <p class="mt-5 max-w-xl text-neutral-300">
         <span class="text-yellow-200">12+</span> años creando aplicaciones <span
