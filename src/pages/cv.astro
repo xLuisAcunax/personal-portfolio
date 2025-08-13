@@ -1,0 +1,93 @@
+---
+import "../styles/global.css";
+import { getCollection, type CollectionEntry } from "astro:content";
+
+type Exp = CollectionEntry<"experience">;
+
+const expAll = await getCollection("experience");
+const toKey = (x: Exp) => (x.data.end === "present" ? "9999-12" : (x.data.end ?? x.data.start));
+const exp = [...expAll].sort((a, b) => toKey(b).localeCompare(toKey(a)));
+
+// TODO: completa tus datos
+const me = {
+  name: "Luis Acuña",
+  role: "Full-Stack Developer",
+  email: "ldacuna83@gmail.com",
+  location: "Barranquilla, Colombia",
+  website: "https://tudominio.dev",
+  github: "https://github.com/xLuisAcunax",
+  linkedin: "https://www.linkedin.com/in/ldacuna83/",
+  summary:
+    "12+ años construyendo aplicaciones limpias, escalables y bien probadas en .NET y Angular. Apasionado por arquitectura limpia, SOLID y CI/CD.",
+};
+---
+<html lang="es" class="bg-white text-black">
+  <head>
+    <meta charset="utf-8" />
+    <title>{me.name} — CV</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <style>
+      @page { size: A4; margin: 16mm; }
+      @media print {
+        .no-print { display: none !important; }
+        html, body { background: white !important; }
+        a { color: black !important; text-decoration: none; }
+        .card { break-inside: avoid; }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Botón para exportar a PDF -->
+    <button onclick="window.print()"
+            class="no-print fixed bottom-5 right-5 px-4 py-2 rounded-xl bg-black text-white shadow">
+      Descargar PDF
+    </button>
+
+    <!-- Hoja A4 centrada -->
+    <main class="mx-auto w-[210mm] min-h-[297mm] p-8">
+      <!-- Header -->
+      <header class="flex items-start justify-between">
+        <div>
+          <h1 class="text-3xl font-semibold">{me.name}</h1>
+          <p class="mt-1 text-neutral-700">{me.role}</p>
+        </div>
+        <ul class="text-sm text-neutral-700">
+          <li><strong>Email:</strong> <a href={`mailto:${me.email}`}>{me.email}</a></li>
+          <li><strong>Web:</strong> <a href={me.website}>{me.website}</a></li>
+          <li><strong>GitHub:</strong> <a href={me.github}>{me.github}</a></li>
+          <li><strong>LinkedIn:</strong> <a href={me.linkedin}>{me.linkedin}</a></li>
+          <li><strong>Ubicación:</strong> {me.location}</li>
+        </ul>
+      </header>
+
+      <!-- Resumen -->
+      <section class="mt-6">
+        <p class="leading-7">{me.summary}</p>
+      </section>
+
+      <!-- Experiencia -->
+      <section class="mt-8">
+        <h2 class="text-xl font-semibold mb-3">Experiencia</h2>
+        <div class="space-y-5">
+          {exp.map((e) => (
+            <article class="card">
+              <h3 class="font-medium">
+                {e.data.company} — {e.data.role}
+              </h3>
+              <p class="text-sm text-neutral-700">
+                {e.data.start} – {e.data.end ?? "presente"}
+                {e.data.stack && e.data.stack.length > 0 && (
+                  <> · {e.data.stack.slice(0,5).join(", ")}</>
+                )}
+              </p>
+              <div class="prose mt-1 max-w-none" set:html={e.body}></div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <!-- (Opcional) Educación / Certificaciones -->
+      <!-- Añade aquí si quieres una sección extra con tu data -->
+    </main>
+  </body>
+</html>

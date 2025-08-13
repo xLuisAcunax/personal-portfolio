@@ -1,22 +1,82 @@
+---
+import "../styles/global.css";
+const { title = "Luis — Portfolio", description = "Software Developer" } =
+  Astro.props;
+---
+
 <!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+<html lang="es" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+
+    <!-- OG -->
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/background.svg" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <title>{title}</title>
+    <link rel="icon" href="/favicon.svg" />
+
+	<script type="application/ld+json">
+	{{
+		"@context": "https://schema.org",
+		"@type": "Person",
+		"name": "Luis Acuña",
+		"jobTitle": "Software Developer",
+		"url": "https://tudominio.dev",
+		"email": "mailto:ldacuna83@gmail.com",
+		"address": { "@type": "PostalAddress", "addressLocality": "Barranquilla", "addressCountry": "CO" },
+		"sameAs": [
+			"https://github.com/xLuisAcunax",
+			"https://www.linkedin.com/in/ldacuna83/"
+		],
+		"knowsAbout": [".NET","C#","Angular","SQL Server","MongoDB","Azure DevOps","Astro","Tailwind","Typescript"]
+	}}
+</script>
+  </head>
+  <body class="min-h-dvh bg-neutral-950 text-neutral-100 antialiased">
+    <header
+      class="fixed inset-x-0 top-0 z-50 h-[var(--header-h)]
+                   flex items-center justify-between px-6 backdrop-blur-md/0 transition
+                   data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:bg-neutral-950/50"
+    >
+      <a href="/" class="font-semibold">luis-acuna.dev</a>
+      <nav class="flex gap-6 text-sm">
+        <a href="#experiencia" class="opacity-80 hover:text-yellow-200"
+          >Experiencia</a
+        >
+        <a href="#proyectos" class="opacity-80 hover:text-yellow-200">Proyectos</a>
+        <a href="#contacto" class="opacity-80 hover:text-yellow-200">Contacto</a>
+		<a href="/cv" class="opacity-80 hover:hover:text-yellow-200">CV</a>
+      </nav>
+    </header>
+
+    <main class="pt-[var(--header-h)]">
+      <slot />
+    </main>
+
+    <script type="module">
+      // Cambia estilos del header al hacer scroll (sin librerías)
+      const header = document.querySelector("header");
+      const onScroll = () =>
+        header?.setAttribute("data-scrolled", window.scrollY > 10);
+      onScroll();
+      addEventListener("scroll", onScroll, { passive: true });
+    </script>
+  </body>
 </html>
 
 <style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+  :root {
+    --header-h: 72px;
+  }
+  html,
+  body {
+    margin: 0;
+    width: 100%;
+    height: 100%;
+  }
 </style>
