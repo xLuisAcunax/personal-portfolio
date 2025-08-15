@@ -23,4 +23,17 @@ const projects = defineCollection({
   }),
 });
 
+export const SITE = {
+  brand: 'Luis Acuña',
+  tagline: 'Software Engineer · .NET · Angular · Azure',
+  github: 'https://github.com/xLuisAcunax',
+  linkedin: 'https://www.linkedin.com/in/ldacuna83/',
+  nav: [
+    { label: 'Experiencia', href: '/#experiencia' },
+    { label: 'Proyectos',   href: '/#proyectos' },
+    { label: 'Contacto',    href: '/#contacto' },
+    { label: 'CV',          href: '/cv.pdf' },
+  ],
+} as const;
+
 export const collections = { experience, projects };
