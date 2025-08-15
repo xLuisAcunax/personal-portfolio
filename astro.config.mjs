@@ -7,9 +7,9 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://ldacuna.netlify.app',
+  integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss()]
-  },
-
-  integrations: [sitemap()]
+  }
 });
