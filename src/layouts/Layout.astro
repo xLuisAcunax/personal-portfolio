@@ -1,5 +1,8 @@
 ---
 import "../styles/global.css";
+import Footer from "../components/Footer.astro";
+import { SITE } from "../content/config.ts";
+
 const { title = "Luis — Portfolio", description = "Software Developer" } = Astro.props;
 ---
 
@@ -81,6 +84,14 @@ const { title = "Luis — Portfolio", description = "Software Developer" } = Ast
     <main class="pt-14 sm:pt-[var(--header-h)]">
       <slot />
     </main>
+
+    <!-- Footer -->
+    <Footer 
+      brand={SITE.brand}
+      tagline={SITE.tagline}
+      githubUrl={SITE.github}
+      linkedinUrl={SITE.linkedin}
+      nav={SITE.nav} />
 
     <script type="module">
       // Cambia estilos del header al hacer scroll (sin librerías)
