@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://ldacuna.netlify.app/sitemap.xml
