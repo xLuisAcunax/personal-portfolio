@@ -1,7 +1,7 @@
 ---
 title: RestroLogic
 summary: PWA para restaurantes (.NET + Angular). Módulos de pedidos, inventario y caja.
-stack: [".NET", "Angular", "PWA", "SQL Server", "Azure DevOps"]
+stack: ["csharp", "angular", "sqlserver", "azuredevops"]
 year: 2025
 cover: "/portfolio.png"
 link: "https://tusitio.dev/restrologic"

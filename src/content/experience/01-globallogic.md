@@ -4,14 +4,10 @@ role: Software Engineer
 start: "2019"
 end: "present"
 stack:
-  [".NET", "C#", "Angular", "Azure DevOps", "SQL Server", "MongoDB", "Docker"]
+  ["C#", "Angular", "TypeScript", "HTML5", "Azure DevOps", "Sql Server", "MongoDb"]
 ---
 
-<ul>
-    <li>Diseño técnico de APIs y microservicios en .NET.</li>
-    <li>CI/CD con Azure DevOps, pruebas unitarias y automatizadas.</li>
-    <li>Mentoría a devs semisenior y revisión de PRs.</li>
-    <li>Desarrollo de aplicaciones web full-stack.</li>
-    <li>Integraciones con terceros y optimización de consultas.</li>
-</ul>
+<p>
+    Desarrollo de aplicativos webs de acuerdo con los procesos de desarrollo definidos por la metodología de la compañía, desde el diseño técnico, construcción del prototipo y aplicación final, hasta los test unitarios. Aplicando técnicas como el pair-programming, peer reviews, diseño orientado a objetos, integración continua.
+</p>
 </br>

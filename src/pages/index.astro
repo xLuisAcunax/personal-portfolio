@@ -164,7 +164,7 @@ const chipColors = [
               class="prose prose-invert mt-2 opacity-90 max-w-none"
               set:html={item.body}
             />
-            {(item.data.stack ?? []).slice(0, 4).map((t, i) => (
+            {(item.data.stack ?? []).map((t, i) => (
               <span class={`${chipBase} ${chipColors[i % chipColors.length]}`}>
                 {t}
               </span>
@@ -223,6 +223,12 @@ const chipColors = [
 					</span>
 					))}
 				</div>
+
+        {/* <div class="flex gap-4">
+              {(p.data.stack ?? []).map((t, i) => (
+                <img src={`icons/${t}.svg`} alt={t} class="w-8 h-8" />
+              ))}
+            </div> */}
 			</a>
         ))
       }
