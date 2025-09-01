@@ -2,6 +2,8 @@
 import "../styles/global.css";
 import { getCollection, type CollectionEntry } from "astro:content";
 
+export const prerender = true; // Static page
+
 type Exp = CollectionEntry<"experience">;
 
 const expAll = await getCollection("experience");

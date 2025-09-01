@@ -4,6 +4,8 @@ import ContactForm from "../components/ContactForm.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 import { SITE } from "../content/config.ts";
 
+export const prerender = true; // Static page
+
 type Exp = CollectionEntry<"experience">;
 
 const [expAll, projectsAll] = await Promise.all([
@@ -235,7 +237,7 @@ const chipColors = [
     </div>
   </section>
 
-  <ContactForm action="https://formspree.io/f/TU_ID_AQUI" />
+  <ContactForm />
 
   <script type="module">
     // Parallax ligero, 60fps y sin librerías
@@ -326,6 +328,22 @@ const chipColors = [
         const show = tag === "all" || tags.includes(tag);
         card.style.display = show ? "" : "none";
       });
+    });
+
+    // Analytics: Track page view
+    window.addEventListener('load', () => {
+      fetch('/api/analytics', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event: 'page_view',
+          data: { 
+            page: 'home',
+            url: window.location.href,
+            referrer: document.referrer || 'direct'
+          }
+        })
+      }).catch(() => {}); // Silent fail for analytics
     });
   </script>
 

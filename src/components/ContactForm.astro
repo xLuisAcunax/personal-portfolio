@@ -1,12 +1,10 @@
 ---
-export interface Props { action: string } // URL de Formspree
-const { action } = Astro.props;
 ---
 <section id="contacto" class="mx-auto max-w-3xl px-6 py-24">
   <h2 class="text-2xl font-semibold mb-4 text-yellow-200">Contacto</h2>
   <p class="opacity-80 mb-6">¿Tienes un proyecto? Escríbeme y te respondo pronto.</p>
 
-  <form id="contact-form" action={action} method="POST"
+  <form id="contact-form" method="POST"
         class="space-y-4 rounded-2xl border border-neutral-800 bg-neutral-950 p-6">
     <!-- Honeypot anti-spam (invisible) -->
     <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
@@ -55,19 +53,54 @@ const { action } = Astro.props;
       status.textContent = 'Enviando…';
 
       try {
-        const res = await fetch(form.action, {
+        // Get form data
+        const formData = new FormData(form);
+        const data = {
+          name: formData.get('name'),
+          email: formData.get('email'),
+          message: formData.get('message')
+        };
+
+        // Send to our API endpoint
+        const res = await fetch('/api/contact', {
           method: 'POST',
-          body: new FormData(form),
-          headers: { 'Accept': 'application/json' }
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data)
         });
-        if (res.ok) {
+
+        const result = await res.json();
+
+        if (result.success) {
           form.reset();
-          status.textContent = '¡Gracias! Te responderé pronto.';
+          status.textContent = '✓ ¡Mensaje enviado y guardado!';
+          
+          // Track analytics
+          fetch('/api/analytics', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              event: 'contact_form_success',
+              data: { contactId: result.id }
+            })
+          }).catch(() => {}); // Silent fail for analytics
         } else {
-          status.textContent = 'No se pudo enviar. Intenta de nuevo o escríbeme a tu-email@tu-dominio.';
+          throw new Error(result.message || 'Error en el envío');
         }
-      } catch {
-        status.textContent = 'Error de red. Reintenta en unos segundos.';
+      } catch (error) {
+        status.textContent = '✗ Error. Intenta de nuevo.';
+        console.error('Contact form error:', error);
+
+        // Track analytics for errors
+        fetch('/api/analytics', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            event: 'contact_form_error',
+            data: { error: error.message }
+          })
+        }).catch(() => {}); // Silent fail for analytics
       } finally {
         submit.disabled = false;
       }

@@ -1,0 +1,72 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+// User model for authentication and user management
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  // Relations
+  projects  UserProject[]
+  contacts  Contact[]
+  
+  @@map("users")
+}
+
+// Enhanced project model that can be associated with users
+model UserProject {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  techStack   String // JSON string of technologies
+  status      String   @default("active") // active, completed, archived
+  isPublic    Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  // Relations
+  userId    String
+  user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("user_projects")
+}
+
+// Contact form submissions (enhanced version)
+model Contact {
+  id        String   @id @default(cuid())
+  name      String
+  email     String
+  message   String
+  status    String   @default("new") // new, read, replied, archived
+  createdAt DateTime @default(now())
+  
+  // Optional user association
+  userId    String?
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  
+  @@map("contacts")
+}
+
+// Analytics/metrics for the SaaS features
+model Analytics {
+  id        String   @id @default(cuid())
+  event     String   // page_view, project_view, contact_form_submit, etc.
+  data      String?  // JSON string with additional data
+  userAgent String?
+  ipAddress String?
+  createdAt DateTime @default(now())
+  
+  @@map("analytics")
+}

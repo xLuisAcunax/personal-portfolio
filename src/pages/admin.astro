@@ -1,0 +1,200 @@
+---
+import Layout from '../layouts/Layout.astro';
+
+export const prerender = false; // This page needs server-side rendering
+---
+
+<Layout title="Admin Dashboard - Luis Portfolio SaaS">
+  <div class="min-h-screen bg-neutral-950 text-neutral-100">
+    <!-- Header -->
+    <header class="border-b border-neutral-800 bg-neutral-900/50 backdrop-blur-sm">
+      <div class="mx-auto max-w-7xl px-6 py-4">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-4">
+            <a href="/" class="text-sm opacity-80 hover:opacity-100">← Back to Portfolio</a>
+            <h1 class="text-xl font-semibold text-yellow-200">Admin Dashboard</h1>
+          </div>
+          <div class="text-sm opacity-80">
+            Portfolio SaaS Management
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="mx-auto max-w-7xl px-6 py-8">
+      <!-- Stats Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <!-- Contacts Card -->
+        <div class="rounded-xl border border-neutral-800 bg-neutral-900/50 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-emerald-300">Contact Messages</h3>
+            <div class="text-2xl">📧</div>
+          </div>
+          <div class="space-y-2">
+            <div class="text-2xl font-bold" id="total-contacts">Loading...</div>
+            <div class="text-sm opacity-80" id="new-contacts">Loading...</div>
+          </div>
+        </div>
+
+        <!-- Projects Card -->
+        <div class="rounded-xl border border-neutral-800 bg-neutral-900/50 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-cyan-300">User Projects</h3>
+            <div class="text-2xl">🚀</div>
+          </div>
+          <div class="space-y-2">
+            <div class="text-2xl font-bold" id="total-projects">Loading...</div>
+            <div class="text-sm opacity-80" id="public-projects">Loading...</div>
+          </div>
+        </div>
+
+        <!-- Analytics Card -->
+        <div class="rounded-xl border border-neutral-800 bg-neutral-900/50 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-lg font-medium text-violet-300">Analytics (7 days)</h3>
+            <div class="text-2xl">📊</div>
+          </div>
+          <div class="space-y-2">
+            <div class="text-2xl font-bold" id="total-events">Loading...</div>
+            <div class="text-sm opacity-80" id="top-event">Loading...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <!-- Recent Contacts -->
+        <div class="rounded-xl border border-neutral-800 bg-neutral-900/50 p-6">
+          <h3 class="text-lg font-medium text-yellow-200 mb-4">Recent Contact Messages</h3>
+          <div id="recent-contacts" class="space-y-4">
+            <div class="text-center py-4 opacity-60">Loading...</div>
+          </div>
+        </div>
+
+        <!-- Recent Events -->
+        <div class="rounded-xl border border-neutral-800 bg-neutral-900/50 p-6">
+          <h3 class="text-lg font-medium text-yellow-200 mb-4">Recent Analytics Events</h3>
+          <div id="recent-events" class="space-y-4">
+            <div class="text-center py-4 opacity-60">Loading...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Database Status -->
+      <div class="mt-8 rounded-xl border border-neutral-800 bg-neutral-900/50 p-6">
+        <h3 class="text-lg font-medium text-rose-300 mb-4">Database Status</h3>
+        <div id="db-status" class="text-sm">
+          <div class="flex items-center gap-2">
+            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+            <span>Database connection established</span>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- JavaScript for loading data -->
+  <script>
+    // Load contacts data
+    async function loadContactsData() {
+      try {
+        const response = await fetch('/api/contact');
+        const result = await response.json();
+        
+        if (result.success) {
+          document.getElementById('total-contacts').textContent = result.data.total;
+          document.getElementById('new-contacts').textContent = `${result.data.new} new messages`;
+          
+          // Display recent contacts
+          const contactsContainer = document.getElementById('recent-contacts');
+          if (result.data.recent.length > 0) {
+            contactsContainer.innerHTML = result.data.recent.map(contact => `
+              <div class="border border-neutral-800 rounded-lg p-3">
+                <div class="flex justify-between items-start mb-2">
+                  <div class="font-medium">${contact.name}</div>
+                  <div class="text-xs opacity-60">${new Date(contact.createdAt).toLocaleDateString()}</div>
+                </div>
+                <div class="text-sm opacity-80">${contact.email}</div>
+                <div class="text-xs mt-1 px-2 py-1 rounded-full inline-block ${
+                  contact.status === 'new' ? 'bg-emerald-900 text-emerald-300' : 'bg-neutral-800 text-neutral-400'
+                }">${contact.status}</div>
+              </div>
+            `).join('');
+          } else {
+            contactsContainer.innerHTML = '<div class="text-center py-4 opacity-60">No recent contacts</div>';
+          }
+        }
+      } catch (error) {
+        console.error('Error loading contacts:', error);
+        document.getElementById('total-contacts').textContent = 'Error';
+        document.getElementById('new-contacts').textContent = 'Failed to load';
+      }
+    }
+
+    // Load projects data
+    async function loadProjectsData() {
+      try {
+        const response = await fetch('/api/projects');
+        const result = await response.json();
+        
+        if (result.success) {
+          const totalProjects = result.data.length;
+          const publicProjects = result.data.filter(p => p.isPublic).length;
+          
+          document.getElementById('total-projects').textContent = totalProjects;
+          document.getElementById('public-projects').textContent = `${publicProjects} public`;
+        }
+      } catch (error) {
+        console.error('Error loading projects:', error);
+        document.getElementById('total-projects').textContent = 'Error';
+        document.getElementById('public-projects').textContent = 'Failed to load';
+      }
+    }
+
+    // Load analytics data
+    async function loadAnalyticsData() {
+      try {
+        const response = await fetch('/api/analytics?days=7');
+        const result = await response.json();
+        
+        if (result.success) {
+          const totalEvents = result.data.events.length;
+          const topEvent = result.data.counts.length > 0 ? result.data.counts[0] : null;
+          
+          document.getElementById('total-events').textContent = totalEvents;
+          document.getElementById('top-event').textContent = topEvent 
+            ? `Top: ${topEvent.event} (${topEvent._count.event})`
+            : 'No events';
+            
+          // Display recent events
+          const eventsContainer = document.getElementById('recent-events');
+          if (result.data.events.length > 0) {
+            eventsContainer.innerHTML = result.data.events.slice(0, 5).map(event => `
+              <div class="border border-neutral-800 rounded-lg p-3">
+                <div class="flex justify-between items-start mb-2">
+                  <div class="font-medium text-sm">${event.event}</div>
+                  <div class="text-xs opacity-60">${new Date(event.createdAt).toLocaleDateString()}</div>
+                </div>
+                ${event.data ? `<div class="text-xs opacity-70 bg-neutral-800 rounded p-1 mt-1">${event.data}</div>` : ''}
+              </div>
+            `).join('');
+          } else {
+            eventsContainer.innerHTML = '<div class="text-center py-4 opacity-60">No recent events</div>';
+          }
+        }
+      } catch (error) {
+        console.error('Error loading analytics:', error);
+        document.getElementById('total-events').textContent = 'Error';
+        document.getElementById('top-event').textContent = 'Failed to load';
+      }
+    }
+
+    // Load all data when page loads
+    window.addEventListener('load', () => {
+      loadContactsData();
+      loadProjectsData();
+      loadAnalyticsData();
+    });
+  </script>
+</Layout>

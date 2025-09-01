@@ -2,6 +2,8 @@
 import Layout from '../../layouts/Layout.astro';
 import { getCollection } from 'astro:content';
 
+export const prerender = true; // Static page
+
 export async function getStaticPaths() {
   const entries = await getCollection('projects');
   return entries.map((entry) => ({ params: { slug: entry.slug }, props: { entry } }));
