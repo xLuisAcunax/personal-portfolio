@@ -41,7 +41,13 @@ const { title = "Luis — Portfolio", description = "Software Developer" } = Ast
 	}
 </script>
   </head>
-  <body class="min-h-dvh bg-neutral-950 text-neutral-100 antialiased">
+  <body class="min-h-dvh text-neutral-100 antialiased selection:bg-blue-500/30">
+    <!-- Fixed Background Gradient -->
+    <div class="fixed inset-0 -z-10 h-full w-full bg-neutral-950">
+      <div class="absolute top-0 z-[-2] h-screen w-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
+      <div class="absolute bottom-0 left-0 z-[-2] h-[500px] w-[500px] rounded-full bg-blue-900/20 blur-[100px]"></div>
+      <div class="absolute top-1/2 right-0 z-[-2] h-[500px] w-[500px] rounded-full bg-purple-900/20 blur-[100px]"></div>
+    </div>
     <header
       class="fixed inset-x-0 top-0 z-50
             h-14 sm:h-[var(--header-h)]

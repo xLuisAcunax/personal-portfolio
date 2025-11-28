@@ -1,11 +1,10 @@
 ---
 title: RestroLogic
-summary: PWA para restaurantes (.NET + Angular). Módulos de pedidos, inventario y caja.
-stack: ["csharp", "angular", "sqlserver", "azuredevops"]
+summary: SaaS para administración de restaurantes. Módulos de domicilios, inventario, facturación electrónica y manejo de sucursales y franquicias.
+stack: ["Node.js", "Angular", "MongoDB", "Express", "Redis"]
 year: 2025
 cover: "/portfolio.png"
-link: "https://tusitio.dev/restrologic"
-repo: "https://github.com/tuusuario/restrologic"
+link: "https://restrologic-web.vercel.app/"
 ---
 
 <ul>

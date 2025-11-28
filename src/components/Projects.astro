@@ -1,0 +1,85 @@
+---
+import { getCollection } from "astro:content";
+
+const projects = await getCollection("projects");
+const sortedProjects = projects.sort((a, b) => (b.data.year || 0) - (a.data.year || 0));
+
+// Separate RestroLogic if it exists, or just take the first one
+const featuredProject = sortedProjects.find(p => p.data.title.toLowerCase().includes('restrologic')) || sortedProjects[0];
+const otherProjects = sortedProjects.filter(p => p.slug !== featuredProject?.slug);
+---
+
+<section id="projects" class="py-20 border-t border-white/10">
+  <div class="max-w-5xl mx-auto px-6">
+    <h2 class="text-3xl font-bold mb-12 text-white">Featured Projects</h2>
+
+    {featuredProject && (
+      <div class="mb-16 group relative rounded-2xl bg-neutral-900/50 backdrop-blur-md border border-white/10 overflow-hidden hover:border-blue-500/30 transition-all shadow-lg">
+        <div class="grid md:grid-cols-2 gap-8">
+          <div class="aspect-video md:aspect-auto bg-neutral-800/50 relative overflow-hidden">
+             {featuredProject.data.cover ? (
+                <img 
+                  src={featuredProject.data.cover} 
+                  alt={featuredProject.data.title} 
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+             ) : (
+                <div class="w-full h-full flex items-center justify-center text-neutral-500">No Image</div>
+             )}
+          </div>
+          <div class="p-8 flex flex-col justify-center">
+            <div class="flex items-center gap-3 mb-4">
+               <span class="px-3 py-1 text-xs font-medium text-blue-300 bg-blue-500/10 rounded-full border border-blue-500/20">Featured</span>
+               {featuredProject.data.year && <span class="text-neutral-500 text-sm">{featuredProject.data.year}</span>}
+            </div>
+            <h3 class="text-3xl font-bold text-white mb-4">{featuredProject.data.title}</h3>
+            <p class="text-neutral-400 mb-6 leading-relaxed">
+              {featuredProject.data.summary}
+            </p>
+            <div class="flex flex-wrap gap-2 mb-8">
+              {featuredProject.data.stack.map(tech => (
+                <span class="px-2 py-1 text-xs text-neutral-300 bg-white/5 border border-white/5 rounded">{tech}</span>
+              ))}
+            </div>
+            <div class="flex gap-4">
+              {featuredProject.data.link && (
+                <a href={featuredProject.data.link} target="_blank" class="text-white font-medium hover:underline decoration-blue-500 underline-offset-4">Visit Site →</a>
+              )}
+               {featuredProject.data.repo && (
+                <a href={featuredProject.data.repo} target="_blank" class="text-neutral-400 font-medium hover:text-white transition-colors">View Code</a>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+
+    <div class="grid md:grid-cols-2 gap-8">
+      {otherProjects.map(project => (
+        <article class="group relative flex flex-col bg-neutral-900/30 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden hover:border-white/20 hover:bg-neutral-900/50 transition-all hover:-translate-y-1 shadow-sm">
+          <div class="aspect-video bg-neutral-800/50 relative overflow-hidden">
+            {project.data.cover ? (
+                <img 
+                  src={project.data.cover} 
+                  alt={project.data.title} 
+                  class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                />
+             ) : (
+                <div class="w-full h-full flex items-center justify-center text-neutral-500">No Image</div>
+             )}
+          </div>
+          <div class="p-6 flex flex-col flex-1">
+            <h3 class="text-xl font-bold text-white mb-2">{project.data.title}</h3>
+            <p class="text-neutral-400 text-sm mb-4 flex-1">{project.data.summary}</p>
+            <div class="flex flex-wrap gap-2 mt-auto">
+               {project.data.stack.slice(0, 4).map(tech => (
+                <span class="px-2 py-1 text-xs text-neutral-400 bg-white/5 border border-white/5 rounded">{tech}</span>
+              ))}
+            </div>
+             <a href={`/projects/${project.slug}`} class="absolute inset-0 z-10" aria-label={`View ${project.data.title}`}></a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
