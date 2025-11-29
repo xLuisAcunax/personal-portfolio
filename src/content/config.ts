@@ -29,10 +29,10 @@ export const SITE = {
   github: 'https://github.com/xLuisAcunax',
   linkedin: 'https://www.linkedin.com/in/ldacuna83/',
   nav: [
-    { label: 'Experiencia', href: '/#experiencia' },
-    { label: 'Proyectos',   href: '/#proyectos' },
-    { label: 'Contacto',    href: '/#contacto' },
-    { label: 'CV',          href: '/cv.pdf' },
+    { label: 'Experience', href: '/#experience' },
+    { label: 'Projects', href: '/#projects' },
+    { label: 'Contact', href: '/#contact' },
+    { label: 'CV', href: '/cv.pdf' },
   ],
 } as const;
 

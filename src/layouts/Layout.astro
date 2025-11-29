@@ -3,21 +3,36 @@ import "../styles/global.css";
 import Footer from "../components/Footer.astro";
 import { SITE } from "../content/config.ts";
 
-const { title = "Luis — Portfolio", description = "Software Developer" } = Astro.props;
+const { 
+  title = "Luis — Portfolio", 
+  description = "Software Developer",
+  keywords = "Software Engineer, .NET, Angular, Azure, Cloud Architect, Full Stack Developer, C#, TypeScript"
+} = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
-<html lang="es" class="scroll-smooth">
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <meta name="keywords" content={keywords} />
+    <link rel="canonical" href={canonicalURL} />
 
     <!-- OG -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content="/background.svg" />
+    
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content="/background.svg" />
     <meta name="theme-color" content="#0a0a0a" />
     <meta name="google-site-verification" content="VH-nhUqUBsA6xxoj_Gm-5JVXPK2NdypfYtO7g5Z305I" />
     <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
@@ -29,15 +44,19 @@ const { title = "Luis — Portfolio", description = "Software Developer" } = Ast
 		"@context": "https://schema.org",
 		"@type": "Person",
 		"name": "Luis Acuña",
-		"jobTitle": "Software Developer",
-		"url": "https://tudominio.dev",
+		"jobTitle": "Senior Software Engineer",
+		"url": "https://ldacuna.netlify.app",
 		"email": "mailto:ldacuna83@gmail.com",
+        "worksFor": {
+            "@type": "Organization",
+            "name": "GlobalLogic"
+        },
 		"address": { "@type": "PostalAddress", "addressLocality": "Barranquilla", "addressCountry": "CO" },
 		"sameAs": [
 			"https://github.com/xLuisAcunax",
 			"https://www.linkedin.com/in/ldacuna83/"
 		],
-		"knowsAbout": [".NET","C#","Angular","SQL Server","MongoDB","Azure DevOps","Astro","Tailwind","Typescript"]
+		"knowsAbout": ["C#", ".NET", "Angular", "Azure", "Google Cloud", "SQL Server", "MongoDB", "Node.js", "TypeScript", "Microservices", "CI/CD", "DevOps"]
 	}
 </script>
   </head>
@@ -59,9 +78,9 @@ const { title = "Luis — Portfolio", description = "Software Developer" } = Ast
 
         <!-- NAV DESKTOP -->
         <nav class="hidden sm:flex gap-6 text-sm">
-          <a href="#experiencia" class="opacity-80 hover:text-yellow-200">Experiencia</a>
-          <a href="#proyectos"   class="opacity-80 hover:text-yellow-200">Proyectos</a>
-          <a href="#contacto"    class="opacity-80 hover:text-yellow-200">Contacto</a>
+          <a href="#experience" class="opacity-80 hover:text-yellow-200">Experience</a>
+          <a href="#projects"   class="opacity-80 hover:text-yellow-200">Projects</a>
+          <a href="#contact"    class="opacity-80 hover:text-yellow-200">Contact</a>
           <a href="/cv"          class="opacity-80 hover:text-yellow-200">CV</a>
         </nav>
 
@@ -80,9 +99,9 @@ const { title = "Luis — Portfolio", description = "Software Developer" } = Ast
                   opacity-0 -translate-y-2 pointer-events-none transition
                   data-[open=true]:opacity-100 data-[open=true]:translate-y-0 data-[open=true]:pointer-events-auto">
         <nav class="mx-auto max-w-5xl px-6 py-3 grid gap-2 text-base">
-          <a href="#experiencia" class="py-2 opacity-90 hover:text-yellow-200">Experiencia</a>
-          <a href="#proyectos"   class="py-2 opacity-90 hover:text-yellow-200">Proyectos</a>
-          <a href="#contacto"    class="py-2 opacity-90 hover:text-yellow-200">Contacto</a>
+          <a href="#experience" class="py-2 opacity-90 hover:text-yellow-200">Experience</a>
+          <a href="#projects"   class="py-2 opacity-90 hover:text-yellow-200">Projects</a>
+          <a href="#contact"    class="py-2 opacity-90 hover:text-yellow-200">Contact</a>
           <a href="/cv"          class="py-2 opacity-90 hover:text-yellow-200">CV</a>
         </nav>
       </div>

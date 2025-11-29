@@ -2,19 +2,19 @@
 export interface Props { action: string } // URL de Formspree
 const { action } = Astro.props;
 ---
-<section id="contacto" class="mx-auto max-w-3xl px-6 py-24">
-  <h2 class="text-2xl font-semibold mb-4 text-yellow-200">Contacto</h2>
-  <p class="opacity-80 mb-6">¿Tienes un proyecto? Escríbeme y te respondo pronto.</p>
+<section id="contact" class="mx-auto max-w-3xl px-6 py-24">
+  <h2 class="text-2xl font-semibold mb-4 text-yellow-200">Contact</h2>
+  <p class="opacity-80 mb-6">Have a project? Drop me a line.</p>
 
   <form id="contact-form" action={action} method="POST"
         class="space-y-4 rounded-2xl border border-neutral-800 bg-neutral-950 p-6">
     <!-- Honeypot anti-spam (invisible) -->
     <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
     <!-- Asunto opcional -->
-    <input type="hidden" name="_subject" value="Nuevo mensaje desde el portafolio" />
+    <input type="hidden" name="_subject" value="New message from portfolio" />
 
     <div>
-      <label for="name" class="block text-sm opacity-80 mb-1">Nombre</label>
+      <label for="name" class="block text-sm opacity-80 mb-1">Name</label>
       <input id="name" name="name" type="text" required minlength="2"
              class="w-full rounded-lg bg-neutral-900 border border-neutral-800 px-3 py-2 outline-none focus:border-neutral-500" />
     </div>
@@ -26,7 +26,7 @@ const { action } = Astro.props;
     </div>
 
     <div>
-      <label for="message" class="block text-sm opacity-80 mb-1">Mensaje</label>
+      <label for="message" class="block text-sm opacity-80 mb-1">Message</label>
       <textarea id="message" name="message" required minlength="10" rows="5"
                 class="w-full rounded-lg bg-neutral-900 border border-neutral-800 px-3 py-2 outline-none focus:border-neutral-500"></textarea>
     </div>
@@ -34,7 +34,7 @@ const { action } = Astro.props;
     <div class="flex items-center gap-3">
       <button id="submit" type="submit"
               class="rounded-xl px-5 py-2.5 bg-white text-black font-medium hover:translate-y-[1px] transition disabled:opacity-50">
-        Enviar
+        Send
       </button>
       <span id="status" class="text-sm opacity-80" aria-live="polite"></span>
     </div>
@@ -52,7 +52,7 @@ const { action } = Astro.props;
       if (hp && hp.value) return; // bot
 
       submit.disabled = true;
-      status.textContent = 'Enviando…';
+      status.textContent = 'Sending…';
 
       try {
         const res = await fetch(form.action, {
@@ -62,12 +62,12 @@ const { action } = Astro.props;
         });
         if (res.ok) {
           form.reset();
-          status.textContent = '¡Gracias! Te responderé pronto.';
+          status.textContent = 'Thanks! I will reply soon.';
         } else {
-          status.textContent = 'No se pudo enviar. Intenta de nuevo o escríbeme a tu-email@tu-dominio.';
+          status.textContent = 'Could not send. Please try again or email me directly.';
         }
       } catch {
-        status.textContent = 'Error de red. Reintenta en unos segundos.';
+        status.textContent = 'Network error. Please try again.';
       } finally {
         submit.disabled = false;
       }

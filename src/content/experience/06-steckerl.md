@@ -7,7 +7,9 @@ stack:
   ["C#", "JavaScript", "HTML5", "CSS3", "Sql Server", "Bootstrap", "jQuery"]
 ---
 
-<p>
-    Ingeniero consultor de sistemas encargado de la planeación, desarrollo e implementación de aplicaciones web y/o desktop en campos de producción, workflows y archivo. Modelado y administracion de bases de datos SQL Server 2008 R2.
-</p>
-</br>
+<ul>
+    <li>Consulting and development of systems for workflow automation in production.</li>
+    <li>Implementation of Desktop and Web applications for administrative management.</li>
+    <li>Modeling and administration of <strong>SQL Server 2008 R2</strong> databases.</li>
+    <li>System integration and operational process optimization.</li>
+</ul>

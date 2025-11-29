@@ -7,7 +7,10 @@ stack:
   ["C#", "Angular", "TypeScript", "HTML5", "Azure DevOps", "Sql Server", "MongoDb"]
 ---
 
-<p>
-    Desarrollo de aplicativos webs de acuerdo con los procesos de desarrollo definidos por la metodología de la compañía, desde el diseño técnico, construcción del prototipo y aplicación final, hasta los test unitarios. Aplicando técnicas como el pair-programming, peer reviews, diseño orientado a objetos, integración continua.
-</p>
-</br>
+<ul>
+    <li>Design and development of scalable microservices using <strong>.NET Core</strong> and <strong>Azure Functions</strong>.</li>
+    <li>Implementation of CI/CD pipelines in <strong>Azure DevOps</strong> to automate deployment and ensure code quality.</li>
+    <li>Optimization of <strong>SQL Server</strong> and <strong>MongoDB</strong> queries to improve high-traffic application performance.</li>
+    <li>Active participation in code reviews and technical mentorship for junior developers.</li>
+    <li>Collaboration in agile teams using Scrum methodology, ensuring continuous value delivery.</li>
+</ul>

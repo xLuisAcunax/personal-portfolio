@@ -7,7 +7,9 @@ stack:
   ["C#", "JavaScript", "HTML5", "CSS3", "Sql Server", "Bootstrap", "jQuery"]
 ---
 
-<p>
-    Análisis, desarrollo e implementación de aplicativos web para el área administrativa y/o estudiantes.
-</p>
-</br>
+<ul>
+    <li>Analysis, design, and development of administrative and student web portals.</li>
+    <li>Implementation of Full Stack solutions using <strong>C#</strong>, <strong>ASP.NET</strong>, and <strong>SQL Server</strong>.</li>
+    <li>Design of responsive interfaces with <strong>Bootstrap</strong> and <strong>CSS3</strong>.</li>
+    <li>Maintenance and updating of legacy systems.</li>
+</ul>

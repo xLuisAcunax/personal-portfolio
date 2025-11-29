@@ -7,7 +7,9 @@ stack:
   ["C#", "JavaScript", "HTML5", "CSS3", "Sql Server"]
 ---
 
-<p>
-    Desarrollo de aplicaciones web en Microsoft ASP.Net (Visual Basic). Desarrollo, soporte y mantenimiento de módulos de aplicación web enfocada al sector salud. Programación y mantenimiento de bases de datos SQL Server (tablas, procedimientos, triggers, jobs). Manejo de control de código fuente y versionamiento a través de team foundation service y visual soursafe.
-</p>
-</br>
+<ul>
+    <li>Maintenance and evolution of critical healthcare applications developed in <strong>ASP.NET</strong>.</li>
+    <li>Administration and optimization of <strong>SQL Server</strong> databases, including Stored Procedures, Triggers, and Jobs.</li>
+    <li>Management of the software development lifecycle and version control.</li>
+    <li>Level 3 technical support for resolving complex production incidents.</li>
+</ul>

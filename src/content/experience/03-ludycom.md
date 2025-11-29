@@ -7,7 +7,9 @@ stack:
   ["C#", "JavaScript", "HTML5", "CSS3", "Sql Server"]
 ---
 
-<p>
-    Desarrollo de aplicaciones web MVC en ASP.Net (C#), JavaScript. Ejecución de planes de trabajo, Estimaciones para tiempos de entrega de proyectos, Generación de scripts SQL, elaboración de bitácoras de avances de proyectos.
-</p>
-</br>
+<ul>
+    <li>Development of web applications using the <strong>MVC</strong> pattern in <strong>ASP.NET (C#)</strong>.</li>
+    <li>Implementation of dynamic client-side logic with <strong>JavaScript</strong> and <strong>jQuery</strong>.</li>
+    <li>Generation of SQL scripts and database optimization.</li>
+    <li>Time estimation and planning for software project deliveries.</li>
+</ul>
