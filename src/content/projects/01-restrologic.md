@@ -4,7 +4,7 @@ summary: Restaurant Management SaaS. Modules for delivery, inventory, electronic
 stack: ["Node.js", "Angular", "MongoDB", "Express", "Redis"]
 year: 2025
 cover: "/portfolio.png"
-link: "https://restrologic-web.vercel.app/"
+link: "https://restrologic-landing.netlify.app/"
 ---
 
 <ul>
