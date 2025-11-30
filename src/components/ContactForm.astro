@@ -1,82 +1,89 @@
 ---
-export interface Props { action: string } // URL de Formspree
-const { action } = Astro.props;
+export interface Props { action?: string }
+const { action = "https://formsubmit.co/ldacuna83@gmail.com" } = Astro.props;
 ---
-<section id="contact" class="mx-auto max-w-3xl px-6 py-24">
-  <h2 class="text-2xl font-semibold mb-4 text-yellow-200">Contact</h2>
-  <p class="opacity-80 mb-6">Have a project? Drop me a line.</p>
+<form id="contact-form" action={action} method="POST"
+      class="space-y-4 rounded-2xl border border-neutral-800 bg-neutral-950/50 p-6 backdrop-blur-sm">
+  <!-- FormSubmit.co configuration -->
+  <input type="hidden" name="_captcha" value="false">
+  <input type="hidden" name="_template" value="table">
+  <input type="hidden" name="_subject" value="New message from portfolio" />
+  <!-- Honeypot for FormSubmit.co (they use _honey usually, but let's keep it simple or use their default) -->
+  <input type="text" name="_honey" style="display:none">
 
-  <form id="contact-form" action={action} method="POST"
-        class="space-y-4 rounded-2xl border border-neutral-800 bg-neutral-950 p-6">
-    <!-- Honeypot anti-spam (invisible) -->
-    <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
-    <!-- Asunto opcional -->
-    <input type="hidden" name="_subject" value="New message from portfolio" />
+  <div>
+    <label for="name" class="block text-sm font-medium text-neutral-300 mb-1">Name</label>
+    <input id="name" name="name" type="text" required minlength="2"
+           class="w-full rounded-lg bg-neutral-900/80 border border-neutral-800 px-4 py-2.5 text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-neutral-600"
+           placeholder="John Doe" />
+  </div>
 
-    <div>
-      <label for="name" class="block text-sm opacity-80 mb-1">Name</label>
-      <input id="name" name="name" type="text" required minlength="2"
-             class="w-full rounded-lg bg-neutral-900 border border-neutral-800 px-3 py-2 outline-none focus:border-neutral-500" />
-    </div>
+  <div>
+    <label for="email" class="block text-sm font-medium text-neutral-300 mb-1">Email</label>
+    <input id="email" name="email" type="email" required
+           class="w-full rounded-lg bg-neutral-900/80 border border-neutral-800 px-4 py-2.5 text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-neutral-600"
+           placeholder="john@example.com" />
+  </div>
 
-    <div>
-      <label for="email" class="block text-sm opacity-80 mb-1">Email</label>
-      <input id="email" name="email" type="email" required
-             class="w-full rounded-lg bg-neutral-900 border border-neutral-800 px-3 py-2 outline-none focus:border-neutral-500" />
-    </div>
+  <div>
+    <label for="message" class="block text-sm font-medium text-neutral-300 mb-1">Message</label>
+    <textarea id="message" name="message" required minlength="10" rows="5"
+              class="w-full rounded-lg bg-neutral-900/80 border border-neutral-800 px-4 py-2.5 text-white outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all placeholder:text-neutral-600"
+              placeholder="Tell me about your project..."></textarea>
+  </div>
 
-    <div>
-      <label for="message" class="block text-sm opacity-80 mb-1">Message</label>
-      <textarea id="message" name="message" required minlength="10" rows="5"
-                class="w-full rounded-lg bg-neutral-900 border border-neutral-800 px-3 py-2 outline-none focus:border-neutral-500"></textarea>
-    </div>
+  <div class="flex items-center justify-between gap-4 pt-2">
+    <button id="submit" type="submit"
+            class="px-6 py-2.5 rounded-lg bg-white text-neutral-900 font-semibold hover:bg-neutral-200 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
+      <span>Send Message</span>
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+        <path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z" />
+      </svg>
+    </button>
+    <span id="status" class="text-sm text-neutral-400" aria-live="polite"></span>
+  </div>
+</form>
 
-    <div class="flex items-center gap-3">
-      <button id="submit" type="submit"
-              class="rounded-xl px-5 py-2.5 bg-white text-black font-medium hover:translate-y-[1px] transition disabled:opacity-50">
-        Send
-      </button>
-      <span id="status" class="text-sm opacity-80" aria-live="polite"></span>
-    </div>
-  </form>
+<script>
+  const form = document.getElementById('contact-form');
+  const submitBtn = document.getElementById('submit');
+  const status = document.getElementById('status');
 
-  <script type="module">
-    // Progressive enhancement: si hay JS, enviamos por fetch sin recargar.
-    const form = document.getElementById('contact-form');
-    const submit = document.getElementById('submit');
-    const status = document.getElementById('status');
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    if (!form || !submitBtn || !status) return;
 
-    form?.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const hp = form.querySelector('[name="_gotcha"]');
-      if (hp && hp.value) return; // bot
+    submitBtn.setAttribute('disabled', 'true');
+    const originalBtnText = submitBtn.innerHTML;
+    submitBtn.innerHTML = 'Sending...';
+    status.textContent = '';
 
-      submit.disabled = true;
-      status.textContent = 'Sending…';
+    try {
+      const res = await fetch(form.getAttribute('action') || '', {
+        method: 'POST',
+        body: new FormData(form),
+        headers: { 'Accept': 'application/json' }
+      });
 
-      try {
-        const res = await fetch(form.action, {
-          method: 'POST',
-          body: new FormData(form),
-          headers: { 'Accept': 'application/json' }
-        });
-        if (res.ok) {
-          form.reset();
-          status.textContent = 'Thanks! I will reply soon.';
-        } else {
-          status.textContent = 'Could not send. Please try again or email me directly.';
-        }
-      } catch {
-        status.textContent = 'Network error. Please try again.';
-      } finally {
-        submit.disabled = false;
+      if (res.ok) {
+        form.reset();
+        status.textContent = 'Message sent successfully!';
+        status.className = 'text-sm text-green-400';
+        setTimeout(() => {
+          status.textContent = '';
+          status.className = 'text-sm text-neutral-400';
+        }, 5000);
+      } else {
+        status.textContent = 'Failed to send. Please try again.';
+        status.className = 'text-sm text-red-400';
       }
-    });
-  </script>
-
-  <style is:global>
-    @media (prefers-reduced-motion: reduce) {
-      #submit { transition: none !important; }
+    } catch (error) {
+      status.textContent = 'Network error. Please try again.';
+      status.className = 'text-sm text-red-400';
+    } finally {
+      submitBtn.removeAttribute('disabled');
+      submitBtn.innerHTML = originalBtnText;
     }
-  </style>
-</section>
+  });
+</script>
