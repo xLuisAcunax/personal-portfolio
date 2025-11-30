@@ -1,15 +1,13 @@
 ---
-export interface Props { action?: string }
-const { action = "https://formsubmit.co/ldacuna83@gmail.com" } = Astro.props;
 ---
-<form id="contact-form" action={action} method="POST"
+<form id="contact-form" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field"
       class="space-y-4 rounded-2xl border border-neutral-800 bg-neutral-950/50 p-6 backdrop-blur-sm">
-  <!-- FormSubmit.co configuration -->
-  <input type="hidden" name="_captcha" value="false">
-  <input type="hidden" name="_template" value="table">
-  <input type="hidden" name="_subject" value="New message from portfolio" />
-  <!-- Honeypot for FormSubmit.co (they use _honey usually, but let's keep it simple or use their default) -->
-  <input type="text" name="_honey" style="display:none">
+  
+  <!-- Netlify Forms Configuration -->
+  <input type="hidden" name="form-name" value="contact" />
+  <p class="hidden">
+    <label>Don’t fill this out if you’re human: <input name="bot-field" /></label>
+  </p>
 
   <div>
     <label for="name" class="block text-sm font-medium text-neutral-300 mb-1">Name</label>
@@ -50,25 +48,23 @@ const { action = "https://formsubmit.co/ldacuna83@gmail.com" } = Astro.props;
   const status = document.getElementById('status');
 
   form?.addEventListener('submit', async (e) => {
-    // e.preventDefault(); // Commented out to allow native submission for activation
+    e.preventDefault();
     
     if (!form || !submitBtn || !status) return;
 
     submitBtn.setAttribute('disabled', 'true');
-    // const originalBtnText = submitBtn.innerHTML;
+    const originalBtnText = submitBtn.innerHTML;
     submitBtn.innerHTML = 'Sending...';
-    // status.textContent = '';
+    status.textContent = '';
 
-    // NOTE: We are temporarily disabling the AJAX fetch to allow the user to be redirected
-    // to FormSubmit.co to activate their email address.
-    // Once activated, we can uncomment the preventDefault and fetch logic.
-
-    /*
     try {
-      const res = await fetch(form.getAttribute('action') || '', {
+      // Netlify forms are submitted to the same URL as the page
+      const formData = new FormData(form);
+      
+      const res = await fetch('/', {
         method: 'POST',
-        body: new FormData(form),
-        headers: { 'Accept': 'application/json' }
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams(formData).toString()
       });
 
       if (res.ok) {
@@ -90,6 +86,5 @@ const { action = "https://formsubmit.co/ldacuna83@gmail.com" } = Astro.props;
       submitBtn.removeAttribute('disabled');
       submitBtn.innerHTML = originalBtnText;
     }
-    */
   });
 </script>
