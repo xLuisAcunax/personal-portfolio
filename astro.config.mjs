@@ -6,7 +6,7 @@ import Icons from 'unplugin-icons/vite';
 
 // https://astro.build/config
 export default defineConfig({
-  site: 'https://ldacuna.netlify.app',
+  site: 'https://luis-acuna.dev',
   integrations: [sitemap()],
   vite: {
     plugins: [tailwindcss(), Icons({ compiler: 'astro' })],
