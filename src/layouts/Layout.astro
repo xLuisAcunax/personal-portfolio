@@ -37,7 +37,11 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta name="google-site-verification" content="VH-nhUqUBsA6xxoj_Gm-5JVXPK2NdypfYtO7g5Z305I" />
     <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
     <title>{title}</title>
-    <link rel="icon" href="/favicon.svg" />
+    <link rel="icon" type="image/png" href="public/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="public/favicon.svg" />
+    <link rel="shortcut icon" href="public/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="public/apple-touch-icon.png" />
+    <link rel="manifest" href="public/site.webmanifest" />
 
 	<script type="application/ld+json">
 	{
@@ -68,20 +72,34 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
       <div class="absolute top-1/2 right-0 z-[-2] h-[500px] w-[500px] rounded-full bg-purple-900/20 blur-[100px]"></div>
     </div>
     <header
+
       class="fixed inset-x-0 top-0 z-50
             h-14 sm:h-[var(--header-h)]
             flex items-center px-6 transition
             data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:bg-neutral-950/50">
       <div class="mx-auto max-w-5xl w-full flex items-center justify-between gap-3">
         <!-- BRAND: evita salto en el guion -->
-        <a href="/" class="font-semibold text-base whitespace-nowrap">luis-acuna.dev</a>
+        <a href="/" class="group flex items-center gap-2">
+          <div class="relative overflow-hidden">
+            <img 
+              src="/logo.png" 
+              alt="Luis Acuña" 
+              class="h-8 w-auto relative z-10 transition-transform duration-500 group-hover:scale-110" 
+            />
+            <!-- Continuous Shine effect -->
+            <div class="absolute top-0 -left-[150%] w-[200%] h-full bg-gradient-to-r from-transparent via-white/60 to-transparent -skew-x-25 animate-shine-infinite z-20 pointer-events-none"></div>
+          </div>
+          <span class="text-sm font-semibold tracking-wide transition-all duration-300 group-hover:text-blue-400 group-hover:drop-shadow-[0_0_10px_rgba(59,130,246,0.6)]">
+            LUIS-ACUNA.DEV
+          </span>
+        </a>
 
         <!-- NAV DESKTOP -->
         <nav class="hidden sm:flex gap-6 text-sm">
           <a href="#experience" class="opacity-80 hover:text-yellow-200">Experience</a>
           <a href="#projects"   class="opacity-80 hover:text-yellow-200">Projects</a>
           <a href="#contact"    class="opacity-80 hover:text-yellow-200">Contact</a>
-          <a href="/cv"          class="opacity-80 hover:text-yellow-200">CV</a>
+          <a href="/cv"         class="opacity-80 hover:text-yellow-200" target="_blank">CV</a>
         </nav>
 
         <!-- HAMBURGUESA (solo móvil) -->
@@ -153,5 +171,15 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     margin: 0;
     width: 100%;
     height: 100%;
+  }
+  
+  /* Continuous Shine Animation */
+  @keyframes shine-infinite {
+    0% { left: -150%; opacity: 0; }
+    15% { left: 150%; opacity: 0.8; } /* Fast shine pass */
+    100% { left: 150%; opacity: 0; } /* Long pause */
+  }
+  .animate-shine-infinite {
+    animation: shine-infinite 4s infinite ease-in-out;
   }
 </style>
