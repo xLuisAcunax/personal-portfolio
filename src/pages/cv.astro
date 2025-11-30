@@ -2,92 +2,162 @@
 import "../styles/global.css";
 import { getCollection, type CollectionEntry } from "astro:content";
 
+```
+---
+import "../styles/global.css";
+import { getCollection, type CollectionEntry } from "astro:content";
+
 type Exp = CollectionEntry<"experience">;
 
 const expAll = await getCollection("experience");
 const toKey = (x: Exp) => (x.data.end === "present" ? "9999-12" : (x.data.end ?? x.data.start));
 const exp = [...expAll].sort((a, b) => toKey(b).localeCompare(toKey(a)));
 
-// TODO: completa tus datos
 const me = {
   name: "Luis Acuña",
-  role: "Full-Stack Developer",
+  role: "Senior Full Stack Developer & Cloud Solutions Architect",
   email: "ldacuna83@gmail.com",
   location: "Barranquilla, Colombia",
-  website: "https://tudominio.dev",
+  website: "https://luis-acuna.dev",
   github: "https://github.com/xLuisAcunax",
   linkedin: "https://www.linkedin.com/in/ldacuna83/",
   summary:
-    "12+ años construyendo aplicaciones limpias, escalables y bien probadas en .NET y Angular. Apasionado por arquitectura limpia, SOLID y CI/CD.",
+    "Over 12 years of experience designing and building scalable enterprise applications. Specialized in .NET, Angular, and Google Cloud Platform. Focused on delivering high-performance, secure, and cloud-native solutions.",
 };
+
+const skills = [
+  ".NET Core", "C#", "Angular", "TypeScript", "Node.js", 
+  "Google Cloud", "MongoDB", "SQL Server", "Docker", "Git"
+];
 ---
-<html lang="es" class="bg-white text-black">
+<html lang="en" class="bg-white text-neutral-900 antialiased">
   <head>
     <meta charset="utf-8" />
     <title>{me.name} — CV</title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style>
-      @page { size: A4; margin: 16mm; }
+      @page { size: A4; margin: 12mm 16mm; }
       @media print {
         .no-print { display: none !important; }
-        html, body { background: white !important; }
-        a { color: black !important; text-decoration: none; }
-        .card { break-inside: avoid; }
+        html, body { background: white !important; color: black !important; }
+        a { text-decoration: none !important; color: black !important; }
+        /* Show href after links in print if needed, but usually cleaner without for CVs unless it's the contact info */
+        /* a[href]:after { content: " (" attr(href) ")"; font-size: 0.8em; } */
+        .break-avoid { break-inside: avoid; }
       }
+      /* Custom print adjustments */
+      body { font-family: 'Inter', system-ui, -apple-system, sans-serif; }
+      h1, h2, h3 { font-family: 'Outfit', system-ui, sans-serif; }
     </style>
+    <!-- Preload fonts if possible, or rely on system fonts for speed/reliability in print -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
   </head>
-  <body>
-    <!-- Botón para exportar a PDF -->
-    <button onclick="window.print()"
-            class="no-print fixed bottom-5 right-5 px-4 py-2 rounded-xl bg-black text-white shadow">
-      Descargar PDF
-    </button>
+  <body class="print:p-0">
+    <!-- Button to export to PDF -->
+    <div class="no-print fixed bottom-8 right-8 z-50">
+      <button onclick="window.print()"
+              class="px-6 py-3 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-medium shadow-lg transition-all hover:-translate-y-1 flex items-center gap-2">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
+        </svg>
+        Download PDF
+      </button>
+    </div>
 
-    <!-- Hoja A4 centrada -->
-    <main class="mx-auto w-[210mm] min-h-[297mm] p-8">
+    <!-- Centered A4 sheet wrapper for screen view -->
+    <main class="mx-auto max-w-[210mm] min-h-[297mm] p-8 md:p-12 bg-white print:p-0 print:max-w-none">
+      
       <!-- Header -->
-      <header class="flex items-start justify-between">
-        <div>
-          <h1 class="text-3xl font-semibold">{me.name}</h1>
-          <p class="mt-1 text-neutral-700">{me.role}</p>
+      <header class="border-b-2 border-neutral-100 pb-8 mb-8">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div>
+            <h1 class="text-4xl md:text-5xl font-bold tracking-tight text-neutral-900">{me.name}</h1>
+            <p class="text-xl text-blue-600 font-medium mt-2">{me.role}</p>
+          </div>
+          
+          <div class="text-sm text-neutral-600 flex flex-col gap-2 md:text-right">
+            <a href={`mailto:${me.email}`} class="hover:text-blue-600 transition-colors flex items-center gap-2 md:justify-end">
+              <span class="print:hidden">✉️</span> {me.email}
+            </a>
+            <a href={me.website} class="hover:text-blue-600 transition-colors flex items-center gap-2 md:justify-end">
+              <span class="print:hidden">🌐</span> {me.website.replace('https://', '')}
+            </a>
+            <a href={me.linkedin} class="hover:text-blue-600 transition-colors flex items-center gap-2 md:justify-end">
+              <span class="print:hidden">in</span> linkedin.com/in/ldacuna83
+            </a>
+            <div class="flex items-center gap-2 md:justify-end">
+              <span class="print:hidden">📍</span> {me.location}
+            </div>
+          </div>
         </div>
-        <ul class="text-sm text-neutral-700">
-          <li><strong>Email:</strong> <a href={`mailto:${me.email}`}>{me.email}</a></li>
-          <li><strong>Web:</strong> <a href={me.website}>{me.website}</a></li>
-          <li><strong>GitHub:</strong> <a href={me.github}>{me.github}</a></li>
-          <li><strong>LinkedIn:</strong> <a href={me.linkedin}>{me.linkedin}</a></li>
-          <li><strong>Ubicación:</strong> {me.location}</li>
-        </ul>
       </header>
 
-      <!-- Resumen -->
-      <section class="mt-6">
-        <p class="leading-7">{me.summary}</p>
-      </section>
+      <div class="grid grid-cols-1 gap-8">
+        <!-- Summary -->
+        <section>
+          <h2 class="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-3">Professional Summary</h2>
+          <p class="text-neutral-800 leading-relaxed text-lg">
+            {me.summary}
+          </p>
+        </section>
 
-      <!-- Experiencia -->
-      <section class="mt-8">
-        <h2 class="text-xl font-semibold mb-3">Experiencia</h2>
-        <div class="space-y-5">
-          {exp.map((e) => (
-            <article class="card">
-              <h3 class="font-medium">
-                {e.data.company} — {e.data.role}
-              </h3>
-              <p class="text-sm text-neutral-700">
-                {e.data.start} – {e.data.end ?? "presente"}
+        <!-- Skills -->
+        <section>
+          <h2 class="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-3">Technical Expertise</h2>
+          <div class="flex flex-wrap gap-2">
+            {skills.map(skill => (
+              <span class="px-3 py-1 bg-neutral-100 text-neutral-700 rounded text-sm font-medium border border-neutral-200 print:border-neutral-300">
+                {skill}
+              </span>
+            ))}
+          </div>
+        </section>
+
+        <!-- Experience -->
+        <section>
+          <h2 class="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-6">Work Experience</h2>
+          <div class="space-y-8">
+            {exp.map((e) => (
+              <article class="break-avoid relative pl-4 border-l-2 border-neutral-200">
+                <div class="absolute -left-[5px] top-1.5 w-2.5 h-2.5 rounded-full bg-neutral-300 border border-white"></div>
+                
+                <header class="flex flex-col sm:flex-row sm:items-baseline sm:justify-between mb-2">
+                  <h3 class="text-lg font-bold text-neutral-900">
+                    {e.data.company}
+                  </h3>
+                  <span class="text-sm font-medium text-neutral-500 tabular-nums">
+                    {e.data.start} — {e.data.end === "present" ? "Present" : (e.data.end ?? "Present")}
+                  </span>
+                </header>
+                
+                <div class="text-blue-600 font-medium mb-3 text-sm">{e.data.role}</div>
+                
+                <div class="prose prose-sm prose-neutral max-w-none text-neutral-700 leading-relaxed [&>ul]:list-disc [&>ul]:pl-4 [&>ul>li]:mb-1">
+                  <div set:html={e.body}></div>
+                </div>
+
                 {e.data.stack && e.data.stack.length > 0 && (
-                  <> · {e.data.stack.slice(0,5).join(", ")}</>
+                  <div class="mt-3 flex flex-wrap gap-x-2 gap-y-1">
+                    {e.data.stack.map(tech => (
+                      <span class="text-xs text-neutral-500 font-mono bg-neutral-50 px-1.5 py-0.5 rounded">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
                 )}
-              </p>
-              <div class="prose mt-1 max-w-none" set:html={e.body}></div>
-            </article>
-          ))}
-        </div>
-      </section>
+              </article>
+            ))}
+          </div>
+        </section>
+      </div>
 
-      <!-- (Opcional) Educación / Certificaciones -->
-      <!-- Añade aquí si quieres una sección extra con tu data -->
+      <!-- Footer for Print -->
+      <footer class="hidden print:block mt-12 pt-8 border-t border-neutral-200 text-center text-xs text-neutral-400">
+        <p>&copy; {new Date().getFullYear()} {me.name} — {me.role}</p>
+      </footer>
     </main>
   </body>
 </html>
+```
