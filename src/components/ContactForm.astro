@@ -50,15 +50,20 @@ const { action = "https://formsubmit.co/ldacuna83@gmail.com" } = Astro.props;
   const status = document.getElementById('status');
 
   form?.addEventListener('submit', async (e) => {
-    e.preventDefault();
+    // e.preventDefault(); // Commented out to allow native submission for activation
     
     if (!form || !submitBtn || !status) return;
 
     submitBtn.setAttribute('disabled', 'true');
-    const originalBtnText = submitBtn.innerHTML;
+    // const originalBtnText = submitBtn.innerHTML;
     submitBtn.innerHTML = 'Sending...';
-    status.textContent = '';
+    // status.textContent = '';
 
+    // NOTE: We are temporarily disabling the AJAX fetch to allow the user to be redirected
+    // to FormSubmit.co to activate their email address.
+    // Once activated, we can uncomment the preventDefault and fetch logic.
+
+    /*
     try {
       const res = await fetch(form.getAttribute('action') || '', {
         method: 'POST',
@@ -85,5 +90,6 @@ const { action = "https://formsubmit.co/ldacuna83@gmail.com" } = Astro.props;
       submitBtn.removeAttribute('disabled');
       submitBtn.innerHTML = originalBtnText;
     }
+    */
   });
 </script>
