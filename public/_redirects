@@ -1,0 +1,2 @@
+# Redireccion del subdominio al dominio principal
+https://ldacuna.netlify.app/* https://luis-acuna.dev/:splat 301!
