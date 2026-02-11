@@ -30,7 +30,7 @@ export const SITE = {
   linkedin: 'https://www.linkedin.com/in/ldacuna83/',
   nav: [
     { label: 'Experience', href: '/#experience' },
-    { label: 'Projects', href: '/#projects' },
+    // { label: 'Projects', href: '/#projects' },
     { label: 'Contact', href: '/#contact' },
     { label: 'CV', href: '/cv.pdf' },
   ],

@@ -3,10 +3,10 @@ import "../styles/global.css";
 import Footer from "../components/Footer.astro";
 import { SITE } from "../content/config.ts";
 
-const { 
-  title = "Luis — Portfolio", 
+const {
+  title = "Luis — Portfolio",
   description = "Software Developer",
-  keywords = "Software Engineer, .NET, Angular, Azure, Cloud Architect, Full Stack Developer, C#, TypeScript"
+  keywords = "Software Engineer, .NET, Angular, Azure, Cloud Architect, Full Stack Developer, C#, TypeScript",
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
@@ -27,15 +27,22 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
     <meta property="og:image" content="/background.svg" />
-    
+
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content="/background.svg" />
     <meta name="theme-color" content="#0a0a0a" />
-    <meta name="google-site-verification" content="VH-nhUqUBsA6xxoj_Gm-5JVXPK2NdypfYtO7g5Z305I" />
-    <link rel="stylesheet" type='text/css' href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css" />
+    <meta
+      name="google-site-verification"
+      content="VH-nhUqUBsA6xxoj_Gm-5JVXPK2NdypfYtO7g5Z305I"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+    />
     <title>{title}</title>
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -44,94 +51,146 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     <link rel="manifest" href="/site.webmanifest" />
 
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PNH39ZJDM1"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PNH39ZJDM1"
+    ></script>
     <script>
       window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
+      function gtag() {
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
 
-      gtag('config', 'G-PNH39ZJDM1');
+      gtag("config", "G-PNH39ZJDM1");
     </script>
 
-	<script type="application/ld+json">
-	{
-		"@context": "https://schema.org",
-		"@type": "Person",
-		"name": "Luis Acuña",
-    "image": "https://luis-acuna.dev/about-me.png",
-		"jobTitle": "Senior Software Engineer",
-		"url": "https://luis-acuna.dev",
-		"email": "mailto:ldacuna83@gmail.com",
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "Luis Acuña",
+        "image": "https://luis-acuna.dev/about-me.png",
+        "jobTitle": "Senior Software Engineer",
+        "url": "https://luis-acuna.dev",
+        "email": "mailto:ldacuna83@gmail.com",
         "worksFor": {
-            "@type": "Organization",
-            "name": "GlobalLogic"
+          "@type": "Organization",
+          "name": "GlobalLogic"
         },
-		"address": { "@type": "PostalAddress", "addressLocality": "Barranquilla", "addressCountry": "CO" },
-		"sameAs": [
-			"https://github.com/xLuisAcunax",
-			"https://www.linkedin.com/in/ldacuna83/"
-		],
-		"knowsAbout": ["C#", ".NET", "Angular", "Azure", "Google Cloud", "SQL Server", "MongoDB", "Node.js", "TypeScript", "Microservices", "CI/CD", "DevOps"]
-	}
-</script>
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Barranquilla",
+          "addressCountry": "CO"
+        },
+        "sameAs": [
+          "https://github.com/xLuisAcunax",
+          "https://www.linkedin.com/in/ldacuna83/"
+        ],
+        "knowsAbout": [
+          "C#",
+          ".NET",
+          "Angular",
+          "Azure",
+          "Google Cloud",
+          "SQL Server",
+          "MongoDB",
+          "Node.js",
+          "TypeScript",
+          "Microservices",
+          "CI/CD",
+          "DevOps"
+        ]
+      }
+    </script>
   </head>
   <body class="min-h-dvh text-neutral-100 antialiased selection:bg-blue-500/30">
     <!-- Fixed Background Gradient -->
     <div class="fixed inset-0 -z-10 h-full w-full bg-neutral-950">
-      <div class="absolute top-0 z-[-2] h-screen w-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"></div>
-      <div class="absolute bottom-0 left-0 z-[-2] h-[500px] w-[500px] rounded-full bg-blue-900/20 blur-[100px]"></div>
-      <div class="absolute top-1/2 right-0 z-[-2] h-[500px] w-[500px] rounded-full bg-purple-900/20 blur-[100px]"></div>
+      <div
+        class="absolute top-0 z-[-2] h-screen w-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"
+      >
+      </div>
+      <div
+        class="absolute bottom-0 left-0 z-[-2] h-[500px] w-[500px] rounded-full bg-blue-900/20 blur-[100px]"
+      >
+      </div>
+      <div
+        class="absolute top-1/2 right-0 z-[-2] h-[500px] w-[500px] rounded-full bg-purple-900/20 blur-[100px]"
+      >
+      </div>
     </div>
     <header
-
       class="fixed inset-x-0 top-0 z-50
             h-14 sm:h-[var(--header-h)]
             flex items-center px-6 transition
-            data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:bg-neutral-950/50">
-      <div class="mx-auto max-w-5xl w-full flex items-center justify-between gap-3">
+            data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:bg-neutral-950/50"
+    >
+      <div
+        class="mx-auto max-w-5xl w-full flex items-center justify-between gap-3"
+      >
         <!-- BRAND: evita salto en el guion -->
         <a href="/" class="group flex items-center gap-2">
           <div class="relative overflow-hidden">
-            <img 
-              src="/logo.png" 
-              alt="Luis Acuña" 
-              class="h-8 w-auto relative z-10 transition-transform duration-500" 
+            <img
+              src="/logo.png"
+              alt="Luis Acuña"
+              class="h-8 w-auto relative z-10 transition-transform duration-500"
             />
             <!-- Continuous Shine effect -->
-            <div class="absolute top-0 -left-[150%] w-[200%] h-full bg-gradient-to-r from-transparent via-white/60 to-transparent -skew-x-25 animate-shine-infinite z-20 pointer-events-none"></div>
+            <div
+              class="absolute top-0 -left-[150%] w-[200%] h-full bg-gradient-to-r from-transparent via-white/60 to-transparent -skew-x-25 animate-shine-infinite z-20 pointer-events-none"
+            >
+            </div>
           </div>
-          <span class="text-sm font-semibold tracking-wide transition-all duration-300 group-hover:text-blue-400 group-hover:drop-shadow-[0_0_10px_rgba(59,130,246,0.6)]">
+          <span
+            class="text-sm font-semibold tracking-wide transition-all duration-300 group-hover:text-blue-400 group-hover:drop-shadow-[0_0_10px_rgba(59,130,246,0.6)]"
+          >
             LUIS-ACUNA.DEV
           </span>
         </a>
 
         <!-- NAV DESKTOP -->
         <nav class="hidden sm:flex gap-6 text-sm">
-          <a href="#experience" class="opacity-80 hover:text-yellow-200">Experience</a>
-          <a href="#projects"   class="opacity-80 hover:text-yellow-200">Projects</a>
-          <a href="#contact"    class="opacity-80 hover:text-yellow-200">Contact</a>
-          <a href="/cv"         class="opacity-80 hover:text-yellow-200" target="_blank">CV</a>
+          <a href="#experience" class="opacity-80 hover:text-yellow-200"
+            >Experience</a
+          >
+          <!-- <a href="#projects"   class="opacity-80 hover:text-yellow-200">Projects</a> -->
+          <a href="#contact" class="opacity-80 hover:text-yellow-200">Contact</a
+          >
+          <a href="/cv" class="opacity-80 hover:text-yellow-200" target="_blank"
+            >CV</a
+          >
         </nav>
 
         <!-- HAMBURGUESA (solo móvil) -->
-        <button id="menuBtn"
-                class="sm:hidden inline-flex items-center justify-center rounded-md border border-neutral-800 px-3 py-2 text-sm"
-                aria-label="Abrir menú" aria-expanded="false">
+        <button
+          id="menuBtn"
+          class="sm:hidden inline-flex items-center justify-center rounded-md border border-neutral-800 px-3 py-2 text-sm"
+          aria-label="Abrir menú"
+          aria-expanded="false"
+        >
           ☰
         </button>
       </div>
 
       <!-- MENÚ MÓVIL -->
-      <div id="mobileMenu"
-          class="sm:hidden fixed inset-x-0 top-14
+      <div
+        id="mobileMenu"
+        class="sm:hidden fixed inset-x-0 top-14
                   bg-neutral-950/95 border-t border-neutral-800
                   opacity-0 -translate-y-2 pointer-events-none transition
-                  data-[open=true]:opacity-100 data-[open=true]:translate-y-0 data-[open=true]:pointer-events-auto">
+                  data-[open=true]:opacity-100 data-[open=true]:translate-y-0 data-[open=true]:pointer-events-auto"
+      >
         <nav class="mx-auto max-w-5xl px-6 py-3 grid gap-2 text-base">
-          <a href="#experience" class="py-2 opacity-90 hover:text-yellow-200">Experience</a>
-          <a href="#projects"   class="py-2 opacity-90 hover:text-yellow-200">Projects</a>
-          <a href="#contact"    class="py-2 opacity-90 hover:text-yellow-200">Contact</a>
-          <a href="/cv"          class="py-2 opacity-90 hover:text-yellow-200">CV</a>
+          <a href="#experience" class="py-2 opacity-90 hover:text-yellow-200"
+            >Experience</a
+          >
+          <a href="#projects" class="py-2 opacity-90 hover:text-yellow-200"
+            >Projects</a
+          >
+          <a href="#contact" class="py-2 opacity-90 hover:text-yellow-200"
+            >Contact</a
+          >
+          <a href="/cv" class="py-2 opacity-90 hover:text-yellow-200">CV</a>
         </nav>
       </div>
     </header>
@@ -141,12 +200,13 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     </main>
 
     <!-- Footer -->
-    <Footer 
+    <Footer
       brand={SITE.brand}
       tagline={SITE.tagline}
       githubUrl={SITE.github}
       linkedinUrl={SITE.linkedin}
-      nav={SITE.nav} />
+      nav={SITE.nav}
+    />
 
     <script type="module">
       // Cambia estilos del header al hacer scroll (sin librerías)
@@ -183,12 +243,21 @@ const canonicalURL = new URL(Astro.url.pathname, Astro.site);
     width: 100%;
     height: 100%;
   }
-  
+
   /* Continuous Shine Animation */
   @keyframes shine-infinite {
-    0% { left: -150%; opacity: 0; }
-    15% { left: 150%; opacity: 0.8; } /* Fast shine pass */
-    100% { left: 150%; opacity: 0; } /* Long pause */
+    0% {
+      left: -150%;
+      opacity: 0;
+    }
+    15% {
+      left: 150%;
+      opacity: 0.8;
+    } /* Fast shine pass */
+    100% {
+      left: 150%;
+      opacity: 0;
+    } /* Long pause */
   }
   .animate-shine-infinite {
     animation: shine-infinite 4s infinite ease-in-out;
