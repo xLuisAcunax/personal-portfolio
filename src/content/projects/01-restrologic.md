@@ -5,6 +5,7 @@ stack: ["Node.js", "Angular", "MongoDB", "Express", "Redis"]
 year: 2025
 cover: "/portfolio.png"
 link: "https://restrologic-landing.netlify.app/"
+repo: "https://github.com/xLuisAcunax/RestroLogic"
 ---
 
 <ul>

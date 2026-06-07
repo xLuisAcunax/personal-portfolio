@@ -5,6 +5,7 @@ stack: ["TypeScript", "HTML5", "CSS3", "tsup", "esbuild"]
 year: 2026
 cover: "/fluxo.png"
 link: "https://luis-acuna.dev/fluxo/examples/index.html"
+repo: "https://github.com/xLuisAcunax/Fluxo"
 ---
 
 <ul>
