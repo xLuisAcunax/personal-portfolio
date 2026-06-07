@@ -1,0 +1,1322 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fluxo Engine - High-Performance Web Animation Library</title>
+
+    <meta
+      name="description"
+      content="Fluxo Engine is a lightweight, high-performance TypeScript animation library. Coordinate tweening, timelines, scroll binds, staggers, and SVGs with 0% idle CPU."
+    />
+    <meta
+      name="keywords"
+      content="animation library, typescript animation, web animations, css transitions, scroll animator, stagger animation, splittext, drawsvg, performance web"
+    />
+    <meta name="author" content="Fluxo Animations" />
+
+    <meta
+      property="og:title"
+      content="Fluxo Engine - High-Performance Web Animation Library"
+    />
+    <meta
+      property="og:description"
+      content="Animate DOM elements, styles, SVGs, and texts at 60fps with zero scroll lag and 0% CPU consumption when idle."
+    />
+    <meta property="og:type" content="website" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --bg-dark: #040113;
+        --bg-sidebar: #090620;
+        --bg-card: rgba(255, 255, 255, 0.01);
+        --bg-canvas: #02000a;
+        --bg-code: #060315;
+        --grid-color: rgba(255, 255, 255, 0.03);
+        --border-color: rgba(255, 255, 255, 0.05);
+        --text-main: #f4f4f5;
+        --text-muted: #71717a;
+        --primary: #8b5cf6;
+        --secondary: #06b6d4;
+        --font-title: "Outfit", sans-serif;
+        --font-body: "Plus Jakarta Sans", sans-serif;
+        --font-code: "Fira Code", monospace;
+      }
+
+      body.light-theme {
+        --bg-dark: #f8fafc;
+        --bg-sidebar: #f1f5f9;
+        --bg-card: #ffffff;
+        --bg-canvas: #f8fafc;
+        --bg-code: #f1f5f9;
+        --grid-color: rgba(15, 23, 42, 0.05);
+        --border-color: #cbd5e1;
+        --text-main: #0f172a;
+        --text-muted: #64748b;
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        background-color: var(--bg-dark);
+        color: var(--text-main);
+        font-family: var(--font-body);
+        min-height: 100vh;
+        display: flex;
+      }
+
+      .scroll-indicator-bar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0%;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary), var(--secondary));
+        z-index: 1000;
+      }
+
+      aside {
+        width: 320px;
+        background-color: var(--bg-sidebar);
+        border-right: 1px solid var(--border-color);
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        flex-shrink: 0;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+      }
+
+      .brand-section {
+        padding: 2.5rem 2rem;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      .logo {
+        font-family: var(--font-title);
+        font-size: 1.5rem;
+        font-weight: 800;
+        background: linear-gradient(135deg, var(--primary), var(--secondary));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        letter-spacing: -1px;
+        margin-bottom: 0.25rem;
+      }
+
+      .tagline {
+        font-size: 0.7rem;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 700;
+      }
+
+      .menu-section {
+        padding: 2rem 1.2rem;
+        flex-grow: 1;
+        overflow-y: auto;
+      }
+
+      .menu-label {
+        font-size: 0.65rem;
+        font-weight: 700;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        margin-bottom: 1rem;
+        padding-left: 0.5rem;
+      }
+
+      .nav-list {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0.4rem;
+        background: rgba(255, 255, 255, 0.01);
+        padding: 6px;
+        border-radius: 14px;
+        border: 1px solid var(--border-color);
+      }
+
+      .nav-pill {
+        position: absolute;
+        left: 6px;
+        width: calc(100% - 12px);
+        height: 44px;
+        background: linear-gradient(
+          135deg,
+          rgba(139, 92, 246, 0.12),
+          rgba(6, 182, 212, 0.12)
+        );
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        border-radius: 10px;
+        pointer-events: none;
+        z-index: 1;
+        opacity: 0;
+      }
+
+      .nav-item {
+        color: var(--text-muted);
+        text-decoration: none;
+        padding: 0.75rem 1rem;
+        font-size: 0.85rem;
+        font-weight: 600;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        z-index: 2;
+        transition: color 0.3s;
+        cursor: pointer;
+      }
+
+      .nav-item.active {
+        color: var(--text-main);
+      }
+
+      .nav-item svg {
+        width: 18px;
+        height: 18px;
+      }
+
+      main {
+        flex-grow: 1;
+        display: flex;
+        flex-direction: column;
+        background: radial-gradient(
+          circle at top right,
+          rgba(139, 92, 246, 0.04),
+          transparent 60%
+        );
+        min-height: 100vh;
+      }
+
+      .dashboard-header {
+        position: sticky;
+        top: 0;
+        z-index: 100;
+        padding: 1.8rem 3rem;
+        border-bottom: 1px solid var(--border-color);
+        background: rgba(4, 1, 19, 0.7);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+      }
+
+      body.light-theme .dashboard-header {
+        background: rgba(248, 250, 252, 0.8);
+      }
+
+      .header-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+
+      .current-title {
+        font-family: var(--font-title);
+        font-size: 1.75rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        margin-bottom: 0.35rem;
+      }
+
+      .current-desc {
+        font-size: 0.9rem;
+        color: var(--text-muted);
+      }
+
+      .theme-toggle-btn {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: all 0.2s;
+      }
+
+      .theme-toggle-btn:hover {
+        background: var(--primary);
+        color: #fff;
+        border-color: var(--primary);
+      }
+
+      .theme-toggle-btn svg {
+        width: 20px;
+        height: 20px;
+      }
+
+      .content-area {
+        flex-grow: 1;
+        padding: 3rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 3.5rem;
+      }
+
+      .playground-card {
+        background: var(--bg-card);
+        border: 1px solid var(--border-color);
+        border-radius: 24px;
+        padding: 2rem;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .card-info {
+        border-bottom: 1px solid var(--border-color);
+        padding-bottom: 1.2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+      }
+
+      .card-title-text {
+        font-family: var(--font-title);
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 0.25rem;
+      }
+
+      .card-desc-text {
+        font-size: 0.85rem;
+        color: var(--text-muted);
+      }
+
+      .reset-btn {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid var(--border-color);
+        color: var(--text-main);
+        padding: 0.45rem 1rem;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .reset-btn:hover {
+        background: var(--primary);
+        border-color: var(--primary);
+      }
+
+      .card-body {
+        display: grid;
+        grid-template-columns: 4.5fr 5.5fr;
+        gap: 2rem;
+      }
+
+      @media (max-width: 968px) {
+        .card-body {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .stage-section,
+      .code-section {
+        min-width: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .stage-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1.5px;
+        color: var(--text-muted);
+      }
+
+      .stage-canvas {
+        background: var(--bg-canvas);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        height: 290px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+        position: relative;
+        background-image: radial-gradient(
+          var(--grid-color) 1px,
+          transparent 1px
+        );
+        background-size: 18px 18px;
+      }
+
+      .stage-header {
+        display: flex;
+        align-items: center;
+        height: 38px;
+      }
+
+      .code-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 38px;
+      }
+
+      .code-tabs {
+        display: flex;
+        background: rgba(255, 255, 255, 0.02);
+        padding: 3px;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+      }
+
+      body.light-theme .code-tabs {
+        background: rgba(15, 23, 42, 0.03);
+      }
+
+      .code-tab-btn {
+        background: transparent;
+        border: none;
+        color: var(--text-muted);
+        padding: 0.4rem 0.85rem;
+        font-size: 0.7rem;
+        font-weight: 700;
+        border-radius: 6px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .code-tab-btn.active {
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--text-main);
+      }
+
+      body.light-theme .code-tab-btn.active {
+        background: rgba(15, 23, 42, 0.06);
+      }
+
+      .copy-btn {
+        background: transparent;
+        border: none;
+        color: var(--primary);
+        font-size: 0.75rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: color 0.2s;
+        padding: 0.25rem 0.5rem;
+      }
+
+      .copy-btn:hover {
+        color: var(--secondary);
+      }
+
+      .code-viewport {
+        background: var(--bg-code);
+        border: 1px solid var(--border-color);
+        border-radius: 16px;
+        padding: 1.25rem;
+        overflow-x: auto;
+        height: 290px;
+      }
+
+      .code-pre {
+        margin: 0;
+        padding: 0;
+        font-family: var(--font-code);
+        font-size: 0.8rem;
+        line-height: 1.5;
+      }
+
+      .code-block {
+        color: #a1a1aa;
+        white-space: pre;
+      }
+
+      span[data-hl="keyword"] {
+        color: #c084fc;
+        font-weight: 600;
+      }
+      span[data-hl="method"] {
+        color: #38bdf8;
+      }
+      span[data-hl="string"] {
+        color: #34d399;
+      }
+      span[data-hl="number"] {
+        color: #fb923c;
+      }
+      span[data-hl="selector"] {
+        color: #f472b6;
+      }
+      span[data-hl="property"] {
+        color: #fbbf24;
+      }
+      span[data-hl="value"] {
+        color: #a78bfa;
+      }
+      span[data-hl="tag"] {
+        color: #60a5fa;
+      }
+      span[data-hl="attr"] {
+        color: #facc15;
+      }
+      span[data-hl="attr-val"] {
+        color: #34d399;
+      }
+
+      body.light-theme span[data-hl="keyword"] {
+        color: #7c3aed;
+        font-weight: 600;
+      }
+      body.light-theme span[data-hl="method"] {
+        color: #0284c7;
+      }
+      body.light-theme span[data-hl="string"] {
+        color: #15803d;
+      }
+      body.light-theme span[data-hl="number"] {
+        color: #ea580c;
+      }
+      body.light-theme span[data-hl="selector"] {
+        color: #db2777;
+      }
+      body.light-theme span[data-hl="property"] {
+        color: #d97706;
+      }
+      body.light-theme span[data-hl="value"] {
+        color: #6d28d9;
+      }
+      body.light-theme span[data-hl="tag"] {
+        color: #2563eb;
+      }
+      body.light-theme span[data-hl="attr"] {
+        color: #b45309;
+      }
+      body.light-theme span[data-hl="attr-val"] {
+        color: #15803d;
+      }
+    </style>
+
+    <style id="dynamicDemoStyles"></style>
+  </head>
+  <body>
+    <div class="scroll-indicator-bar" id="progressBar"></div>
+
+    <aside>
+      <div class="brand-section">
+        <h1 class="logo">Fluxo Engine</h1>
+        <span class="tagline">Showcase Playground</span>
+      </div>
+
+      <div class="menu-section">
+        <h2 class="menu-label">Modules</h2>
+        <nav class="nav-list" id="sidebarNav">
+          <div class="nav-pill" id="sidebarPill"></div>
+
+          <a class="nav-item active" data-key="welcome">
+            <svg
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+              <polyline points="9 22 9 12 15 12 15 22"></polyline>
+            </svg>
+            Get Started
+          </a>
+
+          <a class="nav-item" data-key="basics">
+            <svg
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <polygon points="10 8 16 12 10 16 10 8"></polygon>
+            </svg>
+            Basics & Timelines
+          </a>
+
+          <a class="nav-item" data-key="scroll">
+            <svg
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"
+              ></path>
+              <path d="M12 8v8M9 11l3-3 3 3"></path>
+            </svg>
+            Scroll Animation
+          </a>
+
+          <a class="nav-item" data-key="textsvg">
+            <svg
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"
+              ></path>
+              <polyline points="14 2 14 8 20 8"></polyline>
+              <line x1="16" y1="13" x2="8" y2="13"></line>
+              <line x1="16" y1="17" x2="8" y2="17"></line>
+              <polyline points="10 9 9 9 8 9"></polyline>
+            </svg>
+            Text & SVG Draw
+          </a>
+
+          <a class="nav-item" data-key="interactive">
+            <svg
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+              <polyline points="2 17 12 22 22 17"></polyline>
+              <polyline points="2 12 12 17 22 12"></polyline>
+            </svg>
+            Micro-Interactions
+          </a>
+        </nav>
+      </div>
+    </aside>
+
+    <main>
+      <div class="dashboard-header">
+        <div class="header-content">
+          <div>
+            <h2 class="current-title" id="currentTitle">Basics & Timelines</h2>
+            <p class="current-desc" id="currentDesc">
+              Sequential keyframe animations and object synchronization.
+            </p>
+          </div>
+          <button id="themeToggleBtn" class="theme-toggle-btn">
+            <svg
+              class="sun-icon"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="12" cy="12" r="5"></circle>
+              <line x1="12" y1="1" x2="12" y2="3"></line>
+              <line x1="12" y1="21" x2="12" y2="23"></line>
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+              <line x1="1" y1="12" x2="3" y2="12"></line>
+              <line x1="21" y1="12" x2="23" y2="12"></line>
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+            </svg>
+            <svg
+              class="moon-icon"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              style="display: none"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <div class="content-area" id="contentArea"></div>
+    </main>
+
+    <script type="module">
+      import { fluxo } from "../dist/index.js";
+
+      const sidebarNav = document.getElementById("sidebarNav");
+      const navItems = sidebarNav.querySelectorAll(".nav-item");
+      const currentTitle = document.getElementById("currentTitle");
+      const currentDesc = document.getElementById("currentDesc");
+      const contentArea = document.getElementById("contentArea");
+      const dynamicDemoStyles = document.getElementById("dynamicDemoStyles");
+      const progressBar = document.getElementById("progressBar");
+
+      const themeToggleBtn = document.getElementById("themeToggleBtn");
+      const sunIcon = themeToggleBtn.querySelector(".sun-icon");
+      const moonIcon = themeToggleBtn.querySelector(".moon-icon");
+
+      themeToggleBtn.addEventListener("click", () => {
+        document.body.classList.toggle("light-theme");
+        const isLight = document.body.classList.contains("light-theme");
+        if (isLight) {
+          sunIcon.style.display = "none";
+          moonIcon.style.display = "block";
+        } else {
+          sunIcon.style.display = "block";
+          moonIcon.style.display = "none";
+        }
+      });
+
+      const categories = {
+        welcome: {
+          title: "Get Started",
+          desc: "Learn how to install, configure, and use the Fluxo Animation Engine in your projects.",
+          items: [
+            {
+              id: "welcome-install",
+              title: "Installation & Setup",
+              desc: "Install the library via npm/pnpm, or load it instantly using unpkg/jsDelivr CDNs.",
+              html: `<div class="get-started-preview">\n  <div class="pkg-manager-active">fluxo-animation</div>\n  <div class="pkg-manager-command">npm install fluxo-animation</div>\n</div>`,
+              css: `.get-started-preview {\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n  gap: 1.2rem;\n}\n.pkg-manager-active {\n  font-family: var(--font-title);\n  font-size: 1.6rem;\n  font-weight: 800;\n  color: var(--primary);\n  letter-spacing: 0.5px;\n  transition: transform 0.3s ease;\n}\n.pkg-manager-command {\n  font-family: 'Fira Code', monospace;\n  font-size: 0.8rem;\n  background: rgba(255, 255, 255, 0.02);\n  border: 1px solid var(--border-color);\n  padding: 0.6rem 1.2rem;\n  border-radius: 10px;\n  color: var(--secondary);\n}`,
+              js: `import { fluxo } from 'fluxo-animation';\n\nfluxo.to('.pkg-manager-active', {\n  scale: 1.15,\n  duration: 1.0,\n  repeat: -1,\n  alternate: true,\n  ease: 'medium.inOut'\n});`,
+              init: (card) => {
+                const activeText = card.querySelector(".pkg-manager-active");
+                fluxo.to(activeText, {
+                  scale: 1.15,
+                  duration: 1.0,
+                  repeat: -1,
+                  alternate: true,
+                  ease: "medium.inOut",
+                });
+              },
+            },
+            {
+              id: "welcome-feedback",
+              title: "Community Feedback Widget",
+              desc: "Vote/like the project and rate your experience. This widget stores ratings in local storage.",
+              html: `<div class="feedback-card-widget">\n  <button class="upvote-btn-widget" id="upvoteBtnWidget">\n    <span class="heart-icon">💜</span> Upvote\n    <span class="upvote-count" id="upvoteCountWidget">142</span>\n  </button>\n  <div class="star-rating-widget" id="starRatingWidget">\n    <span class="star-btn" data-star="1">★</span>\n    <span class="star-btn" data-star="2">★</span>\n    <span class="star-btn" data-star="3">★</span>\n    <span class="star-btn" data-star="4">★</span>\n    <span class="star-btn" data-star="5">★</span>\n  </div>\n  <div class="feedback-message" id="feedbackMessageWidget">Choose a rating!</div>\n</div>`,
+              css: `.feedback-card-widget {\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n  gap: 1.25rem;\n}\n.upvote-btn-widget {\n  display: flex;\n  align-items: center;\n  gap: 0.5rem;\n  background: rgba(139, 92, 246, 0.08);\n  border: 1px solid rgba(139, 92, 246, 0.2);\n  color: #c084fc;\n  padding: 0.6rem 1.4rem;\n  border-radius: 30px;\n  font-weight: 700;\n  font-size: 0.9rem;\n  cursor: pointer;\n  transition: all 0.2s ease;\n  font-family: var(--font-title);\n}\n.upvote-btn-widget:hover {\n  background: rgba(139, 92, 246, 0.2);\n  transform: scale(1.04);\n}\n.upvote-btn-widget.active {\n  background: var(--primary);\n  color: #fff;\n  border-color: var(--primary);\n  box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);\n}\n.star-rating-widget {\n  display: flex;\n  gap: 0.4rem;\n}\n.star-btn {\n  font-size: 1.8rem;\n  color: rgba(255, 255, 255, 0.08);\n  cursor: pointer;\n  transition: color 0.15s ease, transform 0.15s ease;\n}\n.star-btn:hover {\n  transform: scale(1.2);\n}\n.star-btn.highlighted {\n  color: #fbbf24;\n  filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.3));\n}\n.feedback-message {\n  font-size: 0.8rem;\n  color: var(--text-muted);\n  font-weight: 600;\n}`,
+              js: `// Save likes and star ratings locally or link to Supabase/Firebase\nconst upvoteBtn = document.getElementById('upvoteBtn');\nconst upvoteCount = document.getElementById('upvoteCount');\nconst stars = document.querySelectorAll('.star-btn');\n\n// Toggle upvote count and star highlights\n// (Full source code can be reviewed in the HTML tab)`,
+              init: (card) => {
+                const upvoteBtn = card.querySelector("#upvoteBtnWidget");
+                const upvoteCount = card.querySelector("#upvoteCountWidget");
+                const stars = card.querySelectorAll(".star-btn");
+                const message = card.querySelector("#feedbackMessageWidget");
+                let likes = parseInt(
+                  localStorage.getItem("fluxo_likes") || "142",
+                );
+                let hasUpvoted =
+                  localStorage.getItem("fluxo_has_upvoted") === "true";
+                upvoteCount.textContent = likes;
+                if (hasUpvoted) {
+                  upvoteBtn.classList.add("active");
+                }
+                upvoteBtn.addEventListener("click", () => {
+                  if (hasUpvoted) {
+                    likes--;
+                    hasUpvoted = false;
+                    upvoteBtn.classList.remove("active");
+                  } else {
+                    likes++;
+                    hasUpvoted = true;
+                    upvoteBtn.classList.add("active");
+                    fluxo.fromTo(
+                      upvoteBtn,
+                      { scale: 0.9 },
+                      { scale: 1, duration: 0.3, ease: "veryFast.out" },
+                    );
+                  }
+                  upvoteCount.textContent = likes;
+                  localStorage.setItem("fluxo_likes", likes);
+                  localStorage.setItem("fluxo_has_upvoted", hasUpvoted);
+                });
+                let rating = parseInt(
+                  localStorage.getItem("fluxo_rating") || "0",
+                );
+
+                const highlightStars = (count) => {
+                  stars.forEach((star, index) => {
+                    if (index < count) {
+                      star.classList.add("highlighted");
+                    } else {
+                      star.classList.remove("highlighted");
+                    }
+                  });
+                };
+                highlightStars(rating);
+                if (rating > 0) {
+                  message.textContent = `Thank you for rating us ${rating} stars!`;
+                }
+                stars.forEach((star, index) => {
+                  star.addEventListener("mouseenter", () => {
+                    highlightStars(index + 1);
+                  });
+                  star.addEventListener("mouseleave", () => {
+                    highlightStars(rating);
+                  });
+                  star.addEventListener("click", () => {
+                    rating = index + 1;
+                    highlightStars(rating);
+                    localStorage.setItem("fluxo_rating", rating);
+                    message.textContent = `Thank you for rating us ${rating} stars!`;
+                    fluxo.fromTo(
+                      star,
+                      { scale: 1.4 },
+                      { scale: 1, duration: 0.4, ease: "veryFast.out" },
+                    );
+                  });
+                });
+              },
+            },
+          ],
+        },
+        basics: {
+          title: "Basics & Timelines",
+          desc: "Core methods of time-based variable interpolation and timeline sequencing.",
+          items: [
+            {
+              id: "basic-to",
+              title: "Method .to()",
+              desc: "Interpolates numeric variables and CSS styles from their initial DOM state towards a target value.",
+              html: `<div class="box-container">\n  <div class="box box-to">.to()</div>\n</div>`,
+              css: `.box-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.box {\n  width: 75px;\n  height: 75px;\n  border-radius: 16px;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  font-weight: 700;\n  color: #fff;\n}\n.box-to {\n  background: linear-gradient(135deg, #8b5cf6, #06b6d4);\n  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);\n}`,
+              js: `fluxo.to('.box-to', {\n  x: 120,\n  rotation: 360,\n  duration: 1.5,\n  repeat: -1,\n  alternate: true,\n  ease: 'medium.inOut'\n});`,
+              init: (card) => {
+                fluxo.to(card.querySelector(".box-to"), {
+                  x: 120,
+                  rotation: 360,
+                  duration: 1.5,
+                  repeat: -1,
+                  alternate: true,
+                  ease: "medium.inOut",
+                });
+              },
+            },
+            {
+              id: "basic-from",
+              title: "Method .from()",
+              desc: "Animates properties from a starting state back to their current layout value.",
+              html: `<div class="box-container">\n  <div class="box box-from">.from()</div>\n</div>`,
+              css: `.box-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.box-from {\n  background: linear-gradient(135deg, #06b6d4, #10b981);\n  box-shadow: 0 8px 24px rgba(6, 182, 212, 0.3);\n}`,
+              js: `fluxo.from('.box-from', {\n  scale: 0.1,\n  opacity: 0,\n  rotation: -180,\n  duration: 1.5,\n  repeat: -1,\n  alternate: true,\n  ease: 'slow.out'\n});`,
+              init: (card) => {
+                fluxo.from(card.querySelector(".box-from"), {
+                  scale: 0.1,
+                  opacity: 0,
+                  rotation: -180,
+                  duration: 1.5,
+                  repeat: -1,
+                  alternate: true,
+                  ease: "slow.out",
+                });
+              },
+            },
+            {
+              id: "basic-fromto",
+              title: "Method .fromTo()",
+              desc: "Explicitly defines both the starting and ending parameters of the animation.",
+              html: `<div class="box-container">\n  <div class="box box-fromto">.fromTo()</div>\n</div>`,
+              css: `.box-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.box-fromto {\n  background: linear-gradient(135deg, #ec4899, #f43f5e);\n  box-shadow: 0 8px 24px rgba(236, 72, 153, 0.3);\n}`,
+              js: `fluxo.fromTo('.box-fromto',\n  { x: -100, opacity: 0.1, scale: 0.5 },\n  { x: 100, opacity: 1, scale: 1.2, duration: 1.5, repeat: -1, alternate: true, ease: 'medium.out' }\n);`,
+              init: (card) => {
+                fluxo.fromTo(
+                  card.querySelector(".box-fromto"),
+                  { x: -100, opacity: 0.1, scale: 0.5 },
+                  {
+                    x: 100,
+                    opacity: 1,
+                    scale: 1.2,
+                    duration: 1.5,
+                    repeat: -1,
+                    alternate: true,
+                    ease: "medium.out",
+                  },
+                );
+              },
+            },
+            {
+              id: "basic-timeline",
+              title: "Timeline Sequences",
+              desc: "Sequences complex animations chronologically with relative offsets and playback controls.",
+              html: `<div class="timeline-playground">\n  <div class="timeline-row">\n    <div class="timeline-box box-tl-1">1</div>\n    <div class="timeline-box box-tl-2">2</div>\n    <div class="timeline-box box-tl-3">3</div>\n  </div>\n  <div class="timeline-controls">\n    <button class="control-btn play-btn">Play</button>\n    <button class="control-btn pause-btn">Pause</button>\n    <button class="control-btn reverse-btn">Reverse</button>\n    <button class="control-btn restart-btn">Restart</button>\n  </div>\n</div>`,
+              css: `.timeline-playground {\n  display: flex;\n  flex-direction: column;\n  align-items: center;\n  gap: 1.8rem;\n  width: 100%;\n}\n.timeline-row {\n  display: flex;\n  gap: 1.2rem;\n}\n.timeline-box {\n  width: 54px;\n  height: 54px;\n  border-radius: 12px;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  font-weight: 700;\n  color: #fff;\n}\n.box-tl-1 { background: #8b5cf6; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3); }\n.box-tl-2 { background: #06b6d4; box-shadow: 0 4px 12px rgba(6, 182, 212, 0.3); }\n.box-tl-3 { background: #ec4899; box-shadow: 0 4px 12px rgba(236, 72, 153, 0.3); }\n.timeline-controls {\n  display: flex;\n  gap: 0.5rem;\n}\n.control-btn {\n  background: rgba(255, 255, 255, 0.04);\n  border: 1px solid rgba(255, 255, 255, 0.08);\n  color: #fff;\n  padding: 0.5rem 1rem;\n  border-radius: 8px;\n  font-size: 0.8rem;\n  cursor: pointer;\n  font-weight: 600;\n  transition: all 0.2s;\n}\n.control-btn:hover {\n  background: #8b5cf6;\n  border-color: #8b5cf6;\n}`,
+              js: `const tl = fluxo.timeline({ repeat: -1, alternate: true });\ntl.to('.box-tl-1', { x: 80, rotation: 180, duration: 1 })\n  .to('.box-tl-2', { y: -40, scale: 1.3, duration: 0.8 }, '-=0.4')\n  .to('.box-tl-3', { x: -80, opacity: 0.3, duration: 0.8 }, '<');\n\ndocument.querySelector('.play-btn').addEventListener('click', () => tl.play());\ndocument.querySelector('.pause-btn').addEventListener('click', () => tl.pause());\ndocument.querySelector('.reverse-btn').addEventListener('click', () => tl.reverse());\ndocument.querySelector('.restart-btn').addEventListener('click', () => {\n  tl.pause();\n  tl.play();\n});`,
+              init: (card) => {
+                const tl = fluxo.timeline({ repeat: -1, alternate: true });
+                tl.to(card.querySelector(".box-tl-1"), {
+                  x: 80,
+                  rotation: 180,
+                  duration: 1,
+                })
+                  .to(
+                    card.querySelector(".box-tl-2"),
+                    { y: -40, scale: 1.3, duration: 0.8 },
+                    "-=0.4",
+                  )
+                  .to(
+                    card.querySelector(".box-tl-3"),
+                    { x: -80, opacity: 0.3, duration: 0.8 },
+                    "<",
+                  );
+
+                card
+                  .querySelector(".play-btn")
+                  .addEventListener("click", () => tl.play());
+                card
+                  .querySelector(".pause-btn")
+                  .addEventListener("click", () => tl.pause());
+                card
+                  .querySelector(".reverse-btn")
+                  .addEventListener("click", () => tl.reverse());
+                card
+                  .querySelector(".restart-btn")
+                  .addEventListener("click", () => {
+                    tl.pause();
+                    tl.play();
+                  });
+              },
+            },
+          ],
+        },
+        scroll: {
+          title: "Scroll Animation",
+          desc: "Synchronizes and triggers animations based on viewport position and page scroll displacement.",
+          items: [
+            {
+              id: "scroll-enter",
+              title: "Play-on-Enter Trigger",
+              desc: "Detects when an element enters a specific viewport threshold and automatically plays the animation.",
+              html: `<div class="scroll-demo-container">\n  <div class="scroll-target-box">Enter</div>\n</div>`,
+              css: `.scroll-demo-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.scroll-target-box {\n  width: 80px;\n  height: 80px;\n  background: linear-gradient(135deg, #3b82f6, #8b5cf6);\n  border-radius: 18px;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  font-weight: 700;\n  box-shadow: 0 8px 24px rgba(59, 130, 246, 0.3);\n}`,
+              js: `fluxo.fromTo('.scroll-target-box',\n  { x: -150, rotation: 0, opacity: 0 },\n  {\n    x: 0,\n    rotation: 360,\n    opacity: 1,\n    duration: 1.2,\n    scroll: {\n      trigger: '.scroll-target-box',\n      start: 'top 85%',\n      once: false\n    }\n  }\n);`,
+              init: (card) => {
+                const target = card.querySelector(".scroll-target-box");
+                fluxo.fromTo(
+                  target,
+                  { x: -150, rotation: 0, opacity: 0 },
+                  {
+                    x: 0,
+                    rotation: 360,
+                    opacity: 1,
+                    duration: 1.2,
+                    scroll: {
+                      trigger: target,
+                      start: "top 85%",
+                      once: false,
+                    },
+                  },
+                );
+              },
+            },
+            {
+              id: "scroll-scrub",
+              title: "Interactive Scroll Scrub",
+              desc: "Binds animation progression directly to the scroll position for real-time synchronization.",
+              html: `<div class="scroll-demo-container">\n  <div class="scroll-target-circle">Scrub</div>\n</div>`,
+              css: `.scroll-demo-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.scroll-target-circle {\n  width: 80px;\n  height: 80px;\n  background: linear-gradient(135deg, #8b5cf6, #ec4899);\n  border-radius: 50%;\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  font-weight: 700;\n  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.3);\n}`,
+              js: `fluxo.fromTo('.scroll-target-circle',\n  { scale: 0.4, rotation: 0, opacity: 0.3 },\n  {\n    scale: 1.4,\n    rotation: 360,\n    opacity: 1,\n    scroll: {\n      trigger: '.scroll-target-circle',\n      start: 'top 90%',\n      end: 'bottom 40%',\n      scrub: true\n    }\n  }\n);`,
+              init: (card) => {
+                const target = card.querySelector(".scroll-target-circle");
+                fluxo.fromTo(
+                  target,
+                  { scale: 0.4, rotation: 0, opacity: 0.3 },
+                  {
+                    scale: 1.4,
+                    rotation: 360,
+                    opacity: 1,
+                    scroll: {
+                      trigger: target,
+                      start: "top 90%",
+                      end: "bottom 40%",
+                      scrub: true,
+                    },
+                  },
+                );
+              },
+            },
+            {
+              id: "scroll-stagger",
+              title: "Staggered Grid Entry",
+              desc: "Triggers a coordinated staggered reveal of grid items once their container enters the viewport.",
+              html: `<div class="grid-container">\n  <div class="grid-item">01</div>\n  <div class="grid-item">02</div>\n  <div class="grid-item">03</div>\n</div>`,
+              css: `.grid-container {\n  display: grid;\n  grid-template-columns: repeat(3, 1fr);\n  gap: 1rem;\n  width: 100%;\n  padding: 1rem;\n}\n.grid-item {\n  background: rgba(255, 255, 255, 0.03);\n  border: 1px solid rgba(255, 255, 255, 0.08);\n  border-radius: 12px;\n  padding: 1.5rem 0;\n  text-align: center;\n  font-weight: 700;\n  font-size: 1.2rem;\n  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);\n}`,
+              js: `fluxo.fromTo('.grid-item',\n  { y: 50, opacity: 0, scale: 0.7 },\n  {\n    y: 0,\n    opacity: 1,\n    scale: 1,\n    duration: 0.8,\n    stagger: 0.15,\n    ease: 'medium.out',\n    scroll: {\n      trigger: '.grid-container',\n      start: 'top 85%',\n      once: true\n    }\n  }\n);`,
+              init: (card) => {
+                const items = card.querySelectorAll(".grid-item");
+                const container = card.querySelector(".grid-container");
+                fluxo.fromTo(
+                  items,
+                  { y: 50, opacity: 0, scale: 0.7 },
+                  {
+                    y: 0,
+                    opacity: 1,
+                    scale: 1,
+                    duration: 0.8,
+                    stagger: 0.15,
+                    ease: "medium.out",
+                    scroll: {
+                      trigger: container,
+                      start: "top 85%",
+                      once: true,
+                    },
+                  },
+                );
+              },
+            },
+          ],
+        },
+        textsvg: {
+          title: "Text & SVG Draw",
+          desc: "Advanced effects for rich typography (SplitText) and outline vector paths drawing.",
+          items: [
+            {
+              id: "text-reveal",
+              title: "Character Reveal Stagger",
+              desc: "Splits text content into individual character elements and reveals them with a staggered cascade.",
+              html: `<div class="text-stage">\n  <h2 class="split-reveal-text">FLUXO ENGINE</h2>\n</div>`,
+              css: `.text-stage {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.split-reveal-text {\n  font-family: var(--font-title);\n  font-size: 2.2rem;\n  font-weight: 800;\n  letter-spacing: 2px;\n  color: #f4f4f5;\n  text-align: center;\n}`,
+              js: `fluxo.revealText('.split-reveal-text', {\n  type: 'chars',\n  stagger: 0.05,\n  duration: 0.8,\n  ease: 'veryFast.out'\n});`,
+              init: (card) => {
+                fluxo.revealText(card.querySelector(".split-reveal-text"), {
+                  type: "chars",
+                  stagger: 0.05,
+                  duration: 0.8,
+                  ease: "veryFast.out",
+                });
+              },
+            },
+            {
+              id: "svg-draw",
+              title: "Vector Path Drawing (DrawSVG)",
+              desc: "Draws vector outlines in real-time by automatically calculating path length and tweening stroke offsets.",
+              html: `<div class="svg-demo-wrapper">\n  <svg viewBox="0 0 200 200" class="draw-svg-box">\n    <path class="svg-path" d="M100 10 C 150 10, 190 50, 190 100 C 190 150, 150 190, 100 190 C 50 190, 10 150, 10 100 C 10 50, 50 10, 100 25 C 135 25, 170 55, 170 100 C 170 140, 135 170, 100 170 C 65 170, 30 140, 30 100 C 30 65, 65 30, 100 40 C 125 40, 150 60, 150 100 C 150 130, 125 150, 100 150 C 75 150, 50 130, 50 100 C 50 75, 75 55, 100 55" />\n  </svg>\n</div>`,
+              css: `.svg-demo-wrapper {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.draw-svg-box {\n  width: 140px;\n  height: 140px;\n  overflow: visible;\n}\n.svg-path {\n  fill: none;\n  stroke: #06b6d4;\n  stroke-width: 4;\n  stroke-linecap: round;\n}`,
+              js: `fluxo.drawSVG('.svg-path', {\n  duration: 2.0,\n  ease: 'slow.inOut',\n  repeat: -1,\n  alternate: true\n});`,
+              init: (card) => {
+                fluxo.drawSVG(card.querySelector(".svg-path"), {
+                  duration: 2.0,
+                  ease: "slow.inOut",
+                  repeat: -1,
+                  alternate: true,
+                });
+              },
+            },
+            {
+              id: "svg-scroll-draw",
+              title: "Scroll-Bound Path Drawing",
+              desc: "Draws an SVG path outline in direct, synchronous synchronization with the browser scroll position.",
+              html: `<div class="svg-demo-wrapper">\n  <svg viewBox="0 0 200 100" class="draw-svg-scroll">\n    <path class="svg-scroll-path" d="M 100 50 C 60 15, 20 25, 20 50 C 20 75, 60 85, 100 50 C 140 15, 180 25, 180 50 C 180 75, 140 85, 100 50 Z" />\n  </svg>\n</div>`,
+              css: `.svg-demo-wrapper {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.draw-svg-scroll {\n  width: 180px;\n  height: 90px;\n}\n.svg-scroll-path {\n  fill: none;\n  stroke: #ec4899;\n  stroke-width: 4;\n  stroke-linecap: round;\n}`,
+              js: `fluxo.drawSVG('.svg-scroll-path', {\n  scroll: {\n    trigger: '.draw-svg-scroll',\n    start: 'top 85%',\n    end: 'bottom 45%',\n    scrub: true\n  }\n});`,
+              init: (card) => {
+                const path = card.querySelector(".svg-scroll-path");
+                fluxo.drawSVG(path, {
+                  scroll: {
+                    trigger: card.querySelector(".draw-svg-scroll"),
+                    start: "top 85%",
+                    end: "bottom 45%",
+                    scrub: true,
+                  },
+                });
+              },
+            },
+          ],
+        },
+        interactive: {
+          title: "Micro-Interactions",
+          desc: "Interactive pointer-bound events that produce dynamic physical attraction and 3D perspective responses.",
+          items: [
+            {
+              id: "mouse-sliding-menu",
+              title: "Sliding Menu (Tab Tracker)",
+              desc: "Creates a sliding highlight pill that follows the mouse cursor across navigation links.",
+              html: `<div class="menu-demo-wrapper">\n  <nav class="sliding-menu-demo">\n    <div class="sliding-menu-pill"></div>\n    <a class="menu-demo-link active">Home</a>\n    <a class="menu-demo-link">Services</a>\n    <a class="menu-demo-link">Projects</a>\n    <a class="menu-demo-link">Contact</a>\n  </nav>\n</div>`,
+              css: `.menu-demo-wrapper {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.sliding-menu-demo {\n  position: relative;\n  display: flex;\n  background: rgba(255, 255, 255, 0.02);\n  padding: 6px;\n  border-radius: 30px;\n  border: 1px solid rgba(255, 255, 255, 0.08);\n}\n.menu-demo-link {\n  color: #a1a1aa;\n  text-decoration: none;\n  padding: 0.6rem 1.2rem;\n  font-size: 0.85rem;\n  font-weight: 600;\n  cursor: pointer;\n  z-index: 2;\n  transition: color 0.3s;\n}\n.menu-demo-link.active, .menu-demo-link:hover {\n  color: #fff;\n}\n.sliding-menu-pill {\n  position: absolute;\n  top: 6px;\n  left: 6px;\n  height: calc(100% - 12px);\n  background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(6, 182, 212, 0.2));\n  border: 1px solid rgba(139, 92, 246, 0.3);\n  border-radius: 24px;\n  pointer-events: none;\n  z-index: 1;\n  opacity: 0;\n}`,
+              js: `fluxo.slidingMenu('.sliding-menu-demo', '.menu-demo-link', '.sliding-menu-pill', {\n  duration: 0.3,\n  ease: 'veryFast.out'\n});`,
+              init: (card) => {
+                fluxo.slidingMenu(
+                  card.querySelector(".sliding-menu-demo"),
+                  ".menu-demo-link",
+                  card.querySelector(".sliding-menu-pill"),
+                  {
+                    duration: 0.3,
+                    ease: "veryFast.out",
+                  },
+                );
+              },
+            },
+            {
+              id: "mouse-magnetic",
+              title: "Magnetic Button",
+              desc: "Creates a virtual magnetic field around a button, attracting it smoothly towards the cursor coordinates.",
+              html: `<div class="magnetic-container">\n  <button class="magnetic-btn-element">Hover Me</button>\n</div>`,
+              css: `.magnetic-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.magnetic-btn-element {\n  width: 90px;\n  height: 90px;\n  border-radius: 50%;\n  background: linear-gradient(135deg, #8b5cf6, #06b6d4);\n  border: none;\n  color: #fff;\n  font-weight: 700;\n  cursor: pointer;\n  font-family: var(--font-title);\n  font-size: 0.85rem;\n  box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4);\n  will-change: transform;\n}`,
+              js: `fluxo.magnetic('.magnetic-btn-element', {\n  strength: 0.5,\n  proximity: 120\n});`,
+              init: (card) => {
+                fluxo.magnetic(card.querySelector(".magnetic-btn-element"), {
+                  strength: 0.5,
+                  proximity: 120,
+                });
+              },
+            },
+            {
+              id: "mouse-tilt",
+              title: "3D Physical Tilt & Glow",
+              desc: "A 3D perspective hover effect that rotates the card surface and maps a radial spotlight glow matching the cursor position.",
+              html: `<div class="tilt-container">\n  <div class="tilt-card-element">\n    <div class="radial-glow"></div>\n    <div class="card-text">\n      <h4>3D PERSPECTIVE</h4>\n      <p>Radial glow & physical tilt</p>\n    </div>\n  </div>\n</div>`,
+              css: `.tilt-container {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.tilt-card-element {\n  width: 220px;\n  height: 130px;\n  background: rgba(255, 255, 255, 0.02);\n  border: 1px solid rgba(255, 255, 255, 0.08);\n  border-radius: 16px;\n  position: relative;\n  display: flex;\n  flex-direction: column;\n  justify-content: flex-end;\n  padding: 1.25rem;\n  overflow: hidden;\n  transform-style: preserve-3d;\n  transform: perspective(800px) rotateX(0deg) rotateY(0deg);\n  will-change: transform;\n}\n.radial-glow {\n  position: absolute;\n  top: 0;\n  left: 0;\n  width: 100%;\n  height: 100%;\n  background: radial-gradient(120px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(6, 182, 212, 0.2), transparent 85%);\n  pointer-events: none;\n}\n.card-text {\n  z-index: 2;\n  transform: translateZ(25px);\n}\n.card-text h4 {\n  font-family: var(--font-title);\n  font-size: 0.95rem;\n  color: #f4f4f5;\n  margin-bottom: 0.2rem;\n}\n.card-text p {\n  font-size: 0.7rem;\n  color: #a1a1aa;\n}`,
+              js: `fluxo.tilt('.tilt-card-element', {\n  maxTilt: 20,\n  perspective: 800\n});`,
+              init: (card) => {
+                fluxo.tilt(card.querySelector(".tilt-card-element"), {
+                  maxTilt: 20,
+                  perspective: 800,
+                });
+              },
+            },
+            {
+              id: "scroll-explosion",
+              title: "Scroll Desintegration (Explode)",
+              desc: "Splits text into characters and scatters them in random 2D vectors as the card scrolls through the viewport.",
+              html: `<div class="scroll-explode-wrap">\n  <div class="scroll-explode-text">EXPLODE</div>\n</div>`,
+              css: `.scroll-explode-wrap {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.scroll-explode-text {\n  font-family: var(--font-title);\n  font-size: 2.5rem;\n  font-weight: 800;\n  letter-spacing: 2px;\n  color: #8b5cf6;\n  text-transform: uppercase;\n}`,
+              js: `fluxo.explodeOnScroll('.scroll-explode-text', {\n  strength: 0.8,\n  start: 'top 85%',\n  end: 'top 30%'\n});`,
+              init: (card) => {
+                fluxo.explodeOnScroll(
+                  card.querySelector(".scroll-explode-text"),
+                  {
+                    strength: 0.8,
+                    start: "top 85%",
+                    end: "top 30%",
+                  },
+                );
+              },
+            },
+            {
+              id: "scroll-implosion",
+              title: "Scroll Convergence (Implode)",
+              desc: "Characters start scattered in a chaotic state and converge precisely into place as the page is scrolled.",
+              html: `<div class="scroll-implode-wrap">\n  <div class="scroll-implode-text">CONVERGE</div>\n</div>`,
+              css: `.scroll-implode-wrap {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  width: 100%;\n  height: 100%;\n}\n.scroll-implode-text {\n  font-family: var(--font-title);\n  font-size: 2.5rem;\n  font-weight: 800;\n  letter-spacing: 2px;\n  color: #06b6d4;\n  text-transform: uppercase;\n}`,
+              js: `fluxo.implodeOnScroll('.scroll-implode-text', {\n  strength: 0.8,\n  start: 'top 95%',\n  end: 'top 55%'\n});`,
+              init: (card) => {
+                fluxo.implodeOnScroll(
+                  card.querySelector(".scroll-implode-text"),
+                  {
+                    strength: 0.8,
+                    start: "top 95%",
+                    end: "top 55%",
+                  },
+                );
+              },
+            },
+          ],
+        },
+      };
+
+      function highlightCode(code, lang) {
+        let html = code
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+
+        if (lang === "javascript" || lang === "js") {
+          const strings = [];
+          const stringRegex = /("[^"]*"|'[^']*'|`[^`]*`)/g;
+          html = html.replace(stringRegex, (match) => {
+            const id = `__STR_PLACEHOLDER_${strings.length}__`;
+            strings.push(`<span data-hl="string">${match}</span>`);
+            return id;
+          });
+
+          html = html.replace(
+            /(fluxo\.\w+|tl\.\w+|\.\w+(?=\())/g,
+            '<span data-hl="method">$1</span>',
+          );
+
+          const keywords =
+            /\b(const|let|var|function|return|import|export|from|new|true|false|null|undefined|class|extends|super)\b/g;
+          html = html.replace(keywords, '<span data-hl="keyword">$1</span>');
+
+          html = html.replace(
+            /\b(\d+(?:\.\d+)?)\b/g,
+            '<span data-hl="number">$1</span>',
+          );
+
+          strings.forEach((strHtml, index) => {
+            html = html.replace(`__STR_PLACEHOLDER_${index}__`, strHtml);
+          });
+        } else if (lang === "css") {
+          html = html.replace(
+            /\b([\w-]+)\s*:/g,
+            '<span data-hl="property">$1</span>:',
+          );
+          html = html.replace(
+            /:\s*([^;]+);/g,
+            ': <span data-hl="value">$1</span>;',
+          );
+          html = html.replace(
+            /([^\}\{]+)\s*\{/g,
+            '<span data-hl="selector">$1</span> {',
+          );
+        } else if (lang === "html") {
+          const tagRegex = /(&lt;\/?[a-zA-Z0-9:-]+)([\s\S]*?)(\/?&gt;)/g;
+          html = html.replace(tagRegex, (match, p1, p2, p3) => {
+            let attrs = p2;
+            if (attrs.trim()) {
+              attrs = attrs.replace(
+                /([\w-]+)=((['"])(.*?)\3)/g,
+                '<span data-hl="attr">$1</span>=<span data-hl="attr-val">$2</span>',
+              );
+            }
+            return `<span data-hl="tag">${p1}</span>${attrs}<span data-hl="tag">${p3}</span>`;
+          });
+        }
+        return html;
+      }
+
+      function renderCategory(categoryKey) {
+        fluxo.killAllTriggers();
+        window.scrollTo(0, 0);
+        dynamicDemoStyles.textContent = "";
+        contentArea.innerHTML = "";
+
+        const category = categories[categoryKey];
+        currentTitle.textContent = category.title;
+        currentDesc.textContent = category.desc;
+
+        category.items.forEach((item) => {
+          const card = document.createElement("div");
+          card.className = "playground-card";
+          card.id = item.id;
+
+          card.innerHTML = `
+          <div class="card-info">
+            <div>
+              <h3 class="card-title-text">${item.title}</h3>
+              <p class="card-desc-text">${item.desc}</p>
+            </div>
+            <button class="reset-btn">Reset</button>
+          </div>
+          <div class="card-body">
+            <div class="stage-section">
+              <div class="stage-header">
+                <span class="stage-label">Live Preview</span>
+              </div>
+              <div class="stage-canvas"></div>
+            </div>
+            <div class="code-section">
+              <div class="code-header">
+                <div class="code-tabs">
+                  <button class="code-tab-btn active" data-tab="js">JavaScript</button>
+                  <button class="code-tab-btn" data-tab="html">HTML</button>
+                  <button class="code-tab-btn" data-tab="css">CSS</button>
+                </div>
+                <button class="copy-btn">Copy</button>
+              </div>
+              <div class="code-viewport">
+                <pre class="code-pre"><code class="code-block"></code></pre>
+              </div>
+            </div>
+          </div>
+        `;
+
+          contentArea.appendChild(card);
+
+          const canvas = card.querySelector(".stage-canvas");
+          canvas.innerHTML = item.html;
+          dynamicDemoStyles.textContent += "\n" + item.css;
+
+          const codeBlock = card.querySelector(".code-block");
+
+          const updateCodeView = (tab) => {
+            let codeText = "";
+            if (tab === "js") codeText = item.js;
+            else if (tab === "html") codeText = item.html;
+            else if (tab === "css") codeText = item.css;
+
+            codeBlock.innerHTML = highlightCode(codeText, tab);
+            card.setAttribute("data-active-tab", tab);
+          };
+
+          updateCodeView("js");
+
+          const tabs = card.querySelectorAll(".code-tab-btn");
+          tabs.forEach((btn) => {
+            btn.addEventListener("click", () => {
+              tabs.forEach((t) => t.classList.remove("active"));
+              btn.classList.add("active");
+              updateCodeView(btn.getAttribute("data-tab"));
+            });
+          });
+
+          const copyBtn = card.querySelector(".copy-btn");
+          copyBtn.addEventListener("click", () => {
+            const activeTab = card.getAttribute("data-active-tab");
+            let text = "";
+            if (activeTab === "js") text = item.js;
+            else if (activeTab === "html") text = item.html;
+            else if (activeTab === "css") text = item.css;
+
+            navigator.clipboard.writeText(text).then(() => {
+              copyBtn.textContent = "Copied!";
+              setTimeout(() => {
+                copyBtn.textContent = "Copy";
+              }, 2000);
+            });
+          });
+
+          const resetBtn = card.querySelector(".reset-btn");
+          resetBtn.addEventListener("click", () => {
+            fluxo.killAllTriggers();
+            canvas.innerHTML = item.html;
+            item.init(card);
+          });
+
+          item.init(card);
+        });
+      }
+
+      fluxo.slidingMenu("#sidebarNav", ".nav-item", "#sidebarPill", {
+        duration: 0.3,
+        ease: "veryFast.out",
+      });
+
+      navItems.forEach((item) => {
+        item.addEventListener("click", (e) => {
+          e.preventDefault();
+          navItems.forEach((i) => i.classList.remove("active"));
+          item.classList.add("active");
+          const key = item.getAttribute("data-key");
+          renderCategory(key);
+        });
+      });
+
+      window.addEventListener("scroll", () => {
+        const docHeight =
+          document.documentElement.scrollHeight - window.innerHeight;
+        if (docHeight > 0) {
+          const percent = (window.scrollY / docHeight) * 100;
+          progressBar.style.width = `${percent}%`;
+        } else {
+          progressBar.style.width = "0%";
+        }
+      });
+
+      renderCategory("welcome");
+    </script>
+  </body>
+</html>

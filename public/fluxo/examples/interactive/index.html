@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fluxo - Premium Interactive Elements & Text Explosion</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&family=Plus+Jakarta+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #030014;
+      --bg-card: rgba(255, 255, 255, 0.03);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --primary: #8b5cf6;
+      --primary-glow: rgba(139, 92, 246, 0.15);
+      --secondary: #06b6d4;
+      --secondary-glow: rgba(6, 182, 212, 0.15);
+      --text-main: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --font-title: 'Outfit', sans-serif;
+      --font-body: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    .glow-bg {
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+      top: -10%;
+      left: -10%;
+      z-index: -1;
+      filter: blur(80px);
+      pointer-events: none;
+    }
+
+    .glow-bg-2 {
+      position: absolute;
+      width: 700px;
+      height: 700px;
+      border-radius: 50%;
+      background: radial-gradient(circle, var(--secondary-glow) 0%, transparent 70%);
+      bottom: -10%;
+      right: -10%;
+      z-index: -1;
+      filter: blur(100px);
+      pointer-events: none;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 1.5rem 5%;
+      z-index: 1000;
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-color);
+      background: rgba(3, 0, 20, 0.7);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo {
+      font-family: var(--font-title);
+      font-size: 1.5rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -1px;
+    }
+
+    .nav-container {
+      position: relative;
+      display: flex;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 4px;
+      border-radius: 9999px;
+      border: 1px solid var(--border-color);
+    }
+
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      padding: 0.6rem 1.2rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      z-index: 2;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    .nav-link.active, .nav-link:hover {
+      color: var(--text-main);
+    }
+
+    .nav-pill {
+      position: absolute;
+      top: 4px;
+      left: 4px;
+      height: calc(100% - 8px);
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(6, 182, 212, 0.2));
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      border-radius: 9999px;
+      pointer-events: none;
+      z-index: 1;
+      width: 0;
+      opacity: 0;
+    }
+
+    section {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 8rem 5% 4rem;
+      border-bottom: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .section-title {
+      font-family: var(--font-title);
+      font-size: 3rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      text-align: center;
+      letter-spacing: -1px;
+      background: linear-gradient(to right, #fff, var(--text-muted));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .section-subtitle {
+      color: var(--text-muted);
+      max-width: 600px;
+      text-align: center;
+      margin-bottom: 4rem;
+      font-size: 1.05rem;
+    }
+
+    .interactive-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 3rem;
+      width: 100%;
+      max-width: 1100px;
+      margin-top: 2rem;
+    }
+
+    .interactive-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 24px;
+      padding: 3rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      min-height: 380px;
+      backdrop-filter: blur(8px);
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    .box-label {
+      position: absolute;
+      top: 1.5rem;
+      left: 1.5rem;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+
+    .magnetic-wrap {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      border: 1px dashed rgba(255,255,255,0.05);
+      position: relative;
+    }
+
+    .magnetic-btn {
+      background: linear-gradient(135deg, var(--primary), #a78bfa);
+      border: none;
+      color: #fff;
+      width: 110px;
+      height: 110px;
+      border-radius: 50%;
+      font-family: var(--font-title);
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      box-shadow: 0 10px 25px rgba(139, 92, 246, 0.4);
+      transform: translate3d(0, 0, 0);
+    }
+
+    .tilt-card {
+      width: 100%;
+      max-width: 280px;
+      height: 200px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 1.5rem;
+      overflow: hidden;
+      transform-style: preserve-3d;
+      transform: perspective(800px) rotateX(0deg) rotateY(0deg);
+      transition: border-color 0.3s;
+    }
+
+    .tilt-card:hover {
+      border-color: rgba(6, 182, 212, 0.3);
+    }
+
+    .card-glow {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(150px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(6, 182, 212, 0.15), transparent 80%);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .card-content {
+      z-index: 2;
+      transform: translateZ(30px);
+    }
+
+    .card-title {
+      font-family: var(--font-title);
+      font-size: 1.25rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .card-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .text-explosion-box {
+      font-family: var(--font-title);
+      font-size: 5.5rem;
+      font-weight: 800;
+      letter-spacing: -2px;
+      text-transform: uppercase;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      width: 100%;
+      max-width: 1000px;
+      line-height: 1;
+      padding: 2rem 0;
+      transform-style: preserve-3d;
+      perspective: 1000px;
+    }
+
+    .fluxo-char {
+      display: inline-block;
+      white-space: pre;
+      transform-style: preserve-3d;
+      backface-visibility: hidden;
+      will-change: transform, opacity;
+    }
+
+    .scroll-indicator-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      z-index: 1001;
+    }
+
+    footer {
+      padding: 6rem 5% 4rem;
+      text-align: center;
+      border-top: 1px solid var(--border-color);
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      background: rgba(3, 0, 20, 0.6);
+      backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="scroll-indicator-bar" id="progressBar"></div>
+  <div class="glow-bg"></div>
+  <div class="glow-bg-2"></div>
+
+  <header>
+    <div class="logo">Fluxo Interactive</div>
+    <div class="nav-container" id="slidingNav">
+      <div class="nav-pill" id="navPill"></div>
+      <a href="#interactive-mouse" class="nav-link">Mouse Events</a>
+      <a href="#scroll-explosion" class="nav-link">Scroll Explode</a>
+      <a href="#scroll-implosion" class="nav-link">Scroll Converge</a>
+      <a href="../text-svg/index.html" class="nav-link">DrawSVG / Text</a>
+    </div>
+  </header>
+
+  <section id="interactive-mouse">
+    <h1 class="section-title">Mouse Micro-Interactions</h1>
+    <p class="section-subtitle">
+      Control dynamic elements via mouse events. Smooth tracking, damping, and 3D perspective animations powered by Fluxo.
+    </p>
+
+    <div class="interactive-grid">
+      <div class="interactive-box">
+        <span class="box-label">Magnetic Button</span>
+        <div class="magnetic-wrap" id="magneticArea">
+          <button class="magnetic-btn" id="magneticBtn">Hover<br>Me</button>
+        </div>
+      </div>
+
+      <div class="interactive-box">
+        <span class="box-label">3D Tilt & Glow</span>
+        <div class="tilt-card" id="tiltCard">
+          <div class="card-glow" id="cardGlow"></div>
+          <div class="card-content">
+            <h3 class="card-title">3D Interface</h3>
+            <p class="card-desc">Tracks the cursor to generate a physical perspective tilt and dynamic glow.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="scroll-explosion" style="background: radial-gradient(circle at center, rgba(139,92,246,0.05), transparent 70%);">
+    <h2 class="section-title">Scroll Disintegration</h2>
+    <p class="section-subtitle">
+      Scroll down to see the text disintegrate. Individual characters are thrown in random directions and fade away.
+    </p>
+
+    <div class="text-explosion-box" id="explosionText">DISINTEGRATION</div>
+  </section>
+
+  <section id="scroll-implosion" style="background: radial-gradient(circle at center, rgba(6,182,212,0.05), transparent 70%);">
+    <h2 class="section-title">Scroll Convergence</h2>
+    <p class="section-subtitle">
+      Scroll down to see the text converge. Characters start scattered chaotically in space and converge precisely into their original place.
+    </p>
+
+    <div class="text-explosion-box" id="implosionText">CONVERGENCE</div>
+  </section>
+
+  <footer>
+    <p style="margin-bottom: 0.5rem; color: var(--text-main); font-weight: 600; font-family: var(--font-title); letter-spacing: 1px;">FLUXO ENGINE PLAYGROUND</p>
+    <p>© 2026 Fluxo Animations. Created for high-performance educational purposes.</p>
+  </footer>
+
+  <script type="module">
+    import { fluxo } from '../../dist/index.js';
+
+    fluxo.slidingMenu('#slidingNav', '.nav-link', '#navPill');
+    fluxo.magnetic('#magneticBtn');
+    fluxo.tilt('#tiltCard');
+    fluxo.explodeOnScroll('#explosionText');
+    fluxo.implodeOnScroll('#implosionText');
+
+    window.addEventListener('scroll', () => {
+      const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+      document.getElementById('progressBar').style.width = `${scrollPercent}%`;
+    });
+  </script>
+</body>
+</html>
