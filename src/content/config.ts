@@ -7,7 +7,7 @@ const experience = defineCollection({
     start: z.string(), // "2024-01"
     end: z.string().optional(), // "present"
     stack: z.array(z.string()).optional(),
-  })
+  }),
 });
 
 const projects = defineCollection({
@@ -17,22 +17,22 @@ const projects = defineCollection({
     summary: z.string(),
     stack: z.array(z.string()),
     year: z.number().int().optional(),
-    cover: z.string().optional(),   // ej: "/projects/restrologic.jpg" (en /public)
+    cover: z.string().optional(), // ej: "/projects/restrologic.jpg" (en /public)
     link: z.string().url().optional(),
     repo: z.string().url().optional(),
   }),
 });
 
 export const SITE = {
-  brand: 'Luis Acuña',
-  tagline: 'Software Engineer · .NET · Angular · Azure',
-  github: 'https://github.com/xLuisAcunax',
-  linkedin: 'https://www.linkedin.com/in/ldacuna83/',
+  brand: "Luis Acuña",
+  tagline: "Software Engineer · .NET · Angular · Azure",
+  github: "https://github.com/xLuisAcunax",
+  linkedin: "https://www.linkedin.com/in/ldacuna83/",
   nav: [
-    { label: 'Experience', href: '/#experience' },
-    // { label: 'Projects', href: '/#projects' },
-    { label: 'Contact', href: '/#contact' },
-    { label: 'CV', href: '/cv.pdf' },
+    { label: "Experience", href: "/#experience" },
+    { label: "Projects", href: "/#projects" },
+    { label: "Contact", href: "/#contact" },
+    { label: "CV", href: "/cv.pdf" },
   ],
 } as const;
 

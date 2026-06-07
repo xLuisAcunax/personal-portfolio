@@ -10,8 +10,7 @@ repo: "https://github.com/xLuisAcunax/RestroLogic"
 
 <ul>
     <li>Scalable <strong>Multi-tenant SaaS</strong> architecture designed for comprehensive restaurant management.</li>
-    <li>Robust backend with <strong>Node.js</strong> and <strong>Express</strong>, handling high concurrency.</li>
-    <li><strong>MongoDB</strong> database optimized for flexibility and performance.</li>
+    <li>Robust backend with <strong>.NET10</strong> and <strong>Angular 22</strong>, handling high concurrency.</li>
+    <li><strong>PostgreSQL</strong> database optimized for flexibility and performance.</li>
     <li>Implementation of <strong>Redis</strong> caching to improve response times.</li>
-    <li>Automated CI/CD pipelines in <strong>Azure DevOps</strong>.</li>
 </ul>
