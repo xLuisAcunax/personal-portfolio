@@ -32,7 +32,7 @@ export const SITE = {
     { label: "Experience", href: "/#experience" },
     { label: "Projects", href: "/#projects" },
     { label: "Contact", href: "/#contact" },
-    { label: "CV", href: "/cv.pdf" },
+    // { label: "CV", href: "/cv.pdf" },
   ],
 } as const;
 
