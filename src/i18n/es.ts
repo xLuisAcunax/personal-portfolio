@@ -21,7 +21,7 @@ export const ES: Dictionary = {
   "section.projects.kicker": "PROYECTOS",
   "section.projects.title": "Cosas que he construido",
   "section.projects.subtitle":
-    "Dos productos que llevo de punta a punta: un SaaS multi-tenant y un motor de renderizado.",
+    "Un producto que llevo de punta a punta: un SaaS multi-tenant.",
   "project.badge.featured": "DESTACADO",
   "project.badge.open-source": "CÓDIGO ABIERTO",
   "project.visit": "Ver sitio",
