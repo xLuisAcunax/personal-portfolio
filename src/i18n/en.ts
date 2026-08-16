@@ -14,7 +14,6 @@ export const EN: Dictionary = {
   "nav.skills": "Skills",
   "nav.contact": "Contact",
 
-  "hero.status": "Available for new projects",
   "hero.kicker": "// SOFTWARE ENGINEER · BARRANQUILLA, CO",
   "hero.role.primary": "Senior Full Stack Developer",
   "hero.role.secondary": "Cloud Solutions Architect",
