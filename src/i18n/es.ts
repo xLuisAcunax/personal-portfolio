@@ -19,8 +19,6 @@ export const ES: Dictionary = {
   "stat.companies": "Empresas",
   "stat.tech": "Tecnologías clave",
 
-  "avatar.hint": "PASA EL MOUSE · DESPLAZA PARA DISOLVER",
-
   "section.projects.kicker": "PROYECTOS",
   "section.projects.title": "Cosas que he construido",
   "section.projects.subtitle":
@@ -48,7 +46,8 @@ export const ES: Dictionary = {
 
   "section.contact.kicker": "CONTACTO",
   "section.contact.title": "Hablemos",
-  "section.contact.subtitle": "Abierto a trabajo senior de full stack y arquitectura cloud.",
+  "section.contact.subtitle":
+    "Abierto a trabajo senior de full stack y arquitectura cloud.",
 
   "form.name": "Nombre",
   "form.email": "Correo",

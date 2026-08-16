@@ -26,8 +26,6 @@ export const EN: Dictionary = {
   "stat.companies": "Companies",
   "stat.tech": "Core technologies",
 
-  "avatar.hint": "HOVER ME · SCROLL TO DISSOLVE",
-
   "section.projects.kicker": "PROJECTS",
   "section.projects.title": "Things I've built",
   "section.projects.subtitle":
@@ -55,7 +53,8 @@ export const EN: Dictionary = {
 
   "section.contact.kicker": "CONTACT",
   "section.contact.title": "Get In Touch",
-  "section.contact.subtitle": "Open to senior full stack and cloud architecture work.",
+  "section.contact.subtitle":
+    "Open to senior full stack and cloud architecture work.",
 
   "form.name": "Name",
   "form.email": "Email",
