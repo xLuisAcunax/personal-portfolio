@@ -361,6 +361,12 @@
       6px 0 0 var(--c-orange),
       0 6px 0 var(--c-yellow),
       6px 6px 0 var(--c-teal);
+    /* The shadows paint 6px past the element's box, so the glyph is really
+       15x15. Reserving that overflow as margin makes the layout box match what
+       is drawn — otherwise flex centring aligns the 9px box and the mark reads
+       as sitting low next to the wordmark. */
+    margin-right: 6px;
+    margin-bottom: 6px;
   }
 
   #mobile-menu {
