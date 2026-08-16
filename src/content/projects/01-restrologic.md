@@ -3,7 +3,7 @@ title: RestroLogic
 summary: Restaurant Management SaaS. Modules for delivery, inventory, electronic invoicing, and branch & franchise management.
 stack: ["Node.js", "Angular", "MongoDB", "Express", "Redis"]
 year: 2025
-cover: "/portfolio.png"
+cover: "/portfolio.jpg"
 link: "https://restrologic-landing.netlify.app/"
 repo: "https://github.com/xLuisAcunax/RestroLogic"
 ---
