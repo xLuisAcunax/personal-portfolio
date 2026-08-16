@@ -14,7 +14,8 @@ const stats = [
   { value: SKILLS.length, suffix: "", labelKey: "stat.tech", accent: "text-orange" },
 ];
 
-const actions = [
+/** Icon-only circles; the labelled CV button carries the row's text. */
+const socialActions = [
   {
     href: SITE.linkedin,
     icon: "linkedin",
@@ -25,7 +26,7 @@ const actions = [
     href: SITE.github,
     icon: "github",
     label: "GitHub",
-    class: "border border-line bg-surface/60 text-fg",
+    class: "border border-line bg-surface/60 text-fg transition-colors hover:border-teal/50",
   },
 ] as const;
 ---
@@ -37,8 +38,23 @@ const actions = [
   <div class="grid items-center gap-9 min-[1000px]:grid-cols-[1.15fr_0.85fr] min-[1000px]:gap-14">
     <div>
       <p
+        class="mb-6 inline-flex animate-fade-up items-center gap-2.5 rounded-full border border-teal/40 bg-teal/10 px-3.5 py-1.5"
+      >
+        <span class="relative flex h-[7px] w-[7px]" aria-hidden="true">
+          <span class="absolute inset-0 animate-ping-slow rounded-full bg-teal"></span>
+          <span class="relative h-[7px] w-[7px] rounded-full bg-teal"></span>
+        </span>
+        <span
+          data-i18n="hero.status"
+          class="font-mono text-[11.5px] font-semibold tracking-[0.08em] text-teal uppercase"
+        >
+          {t("hero.status")}
+        </span>
+      </p>
+
+      <p
         data-i18n="hero.kicker"
-        class="mb-3.5 animate-fade-up font-mono text-[11.5px] tracking-[0.14em] text-muted"
+        class="mb-3.5 animate-fade-up font-mono text-[12.5px] tracking-[0.14em] text-muted"
         style="animation-delay:.06s"
       >
         {t("hero.kicker")}
@@ -69,21 +85,25 @@ const actions = [
         set:html={t("hero.bio")}
       ></p>
 
-      <div class="mb-11 flex animate-fade-up flex-wrap gap-3" style="animation-delay:.5s">
+      <div
+        class="mb-11 flex animate-fade-up flex-wrap items-center gap-3"
+        style="animation-delay:.5s"
+      >
         {
-          actions.map((action) => (
+          socialActions.map((action) => (
             <a
               href={action.href}
               target="_blank"
               rel="noopener noreferrer"
+              aria-label={action.label}
+              title={action.label}
               data-magnet
               class:list={[
-                "inline-flex items-center gap-2.5 rounded-[10px] px-5 py-3 text-sm font-bold",
+                "inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full",
                 action.class,
               ]}
             >
-              <SocialIcon name={action.icon} />
-              <span>{action.label}</span>
+              <SocialIcon name={action.icon} size={17} />
             </a>
           ))
         }
@@ -92,20 +112,25 @@ const actions = [
           target="_blank"
           rel="noopener noreferrer"
           data-magnet
-          class="inline-flex items-center gap-2.5 rounded-[10px] border border-yellow/50 bg-yellow/10 px-5 py-3 text-sm font-bold whitespace-nowrap text-yellow-ink"
+          class="inline-flex h-11 items-center gap-2.5 rounded-full border border-yellow/50 bg-yellow/10 px-5 text-sm font-bold whitespace-nowrap text-yellow-ink"
         >
           <SocialIcon name="download" />
           <span data-i18n="hero.cv">{t("hero.cv")}</span>
         </a>
       </div>
 
-      <div id="stats" class="grid max-w-[520px] grid-cols-3 gap-3.5">
+      {/*
+        Below 520px a third of the screen is too narrow for labels like "Core
+        technologies", so each stat becomes a full-width row with the number
+        beside the label instead of above it.
+      */}
+      <div id="stats" class="grid max-w-[520px] gap-3 min-[520px]:grid-cols-3 min-[520px]:gap-3.5">
         {
           stats.map((stat) => (
-            <div class="rounded-xl border border-line bg-surface/55 px-4.5 py-4">
+            <div class="flex min-w-0 items-center gap-3.5 rounded-xl border border-line bg-surface/55 px-4 py-3.5 min-[520px]:flex-col min-[520px]:items-start min-[520px]:gap-0 min-[520px]:px-4.5 min-[520px]:py-4">
               <p
                 class:list={[
-                  "m-0 font-mono text-[34px] font-bold tracking-[-0.03em]",
+                  "m-0 font-mono text-[30px] font-bold tracking-[-0.03em] whitespace-nowrap min-[520px]:text-[34px]",
                   stat.accent,
                 ]}
               >
@@ -114,7 +139,7 @@ const actions = [
               </p>
               <p
                 data-i18n={stat.labelKey}
-                class="mt-1 text-[11px] font-semibold tracking-[0.1em] text-muted uppercase"
+                class="m-0 text-[11px] leading-tight font-semibold tracking-[0.08em] break-words text-muted uppercase min-[520px]:mt-1 min-[520px]:tracking-[0.1em]"
               >
                 {t(stat.labelKey)}
               </p>
@@ -125,7 +150,7 @@ const actions = [
     </div>
 
     <div class="relative flex justify-center max-[999px]:order-first">
-      <div data-avatar-stage class="relative aspect-square w-[min(600px,78vw)]">
+      <div data-avatar-stage class="relative aspect-square w-[min(380px,78vw)]">
         <div
           id="avatar-glow"
           class="absolute inset-[8%] rounded-full blur-[22px]"
@@ -140,8 +165,8 @@ const actions = [
           id="avatar-fallback"
           src={SITE.avatar}
           alt={`Portrait of ${SITE.brand}`}
-          width="600"
-          height="600"
+          width="380"
+          height="380"
           class="absolute inset-0 h-full w-full rounded-[26px] object-cover"
         />
 
@@ -153,6 +178,14 @@ const actions = [
           aria-label={`Pixel-art portrait of ${SITE.brand}`}
           class="relative block h-full w-full [image-rendering:pixelated]"></canvas>
 
+        <div
+          id="avatar-hint"
+          class="absolute bottom-[2%] left-[2%] flex items-center gap-2 rounded-lg border border-line bg-surface/85 px-2.5 py-1.5 font-mono text-[10.5px] tracking-[0.08em] text-muted backdrop-blur-[8px]"
+          aria-hidden="true"
+        >
+          <span class="h-1.5 w-1.5 bg-orange"></span>
+          <span data-i18n="avatar.hint" class="shrink-0 whitespace-nowrap">{t("avatar.hint")}</span>
+        </div>
       </div>
     </div>
   </div>
