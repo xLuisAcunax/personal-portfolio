@@ -38,21 +38,6 @@ const socialActions = [
   <div class="grid items-center gap-9 min-[1000px]:grid-cols-[1.15fr_0.85fr] min-[1000px]:gap-14">
     <div>
       <p
-        class="mb-6 inline-flex animate-fade-up items-center gap-2.5 rounded-full border border-teal/40 bg-teal/10 px-3.5 py-1.5"
-      >
-        <span class="relative flex h-[7px] w-[7px]" aria-hidden="true">
-          <span class="absolute inset-0 animate-ping-slow rounded-full bg-teal"></span>
-          <span class="relative h-[7px] w-[7px] rounded-full bg-teal"></span>
-        </span>
-        <span
-          data-i18n="hero.status"
-          class="font-mono text-[11.5px] font-semibold tracking-[0.08em] text-teal uppercase"
-        >
-          {t("hero.status")}
-        </span>
-      </p>
-
-      <p
         data-i18n="hero.kicker"
         class="mb-3.5 animate-fade-up font-mono text-[12.5px] tracking-[0.14em] text-muted"
         style="animation-delay:.06s"
@@ -177,15 +162,6 @@ const socialActions = [
           role="img"
           aria-label={`Pixel-art portrait of ${SITE.brand}`}
           class="relative block h-full w-full [image-rendering:pixelated]"></canvas>
-
-        <div
-          id="avatar-hint"
-          class="absolute bottom-[2%] left-[2%] flex items-center gap-2 rounded-lg border border-line bg-surface/85 px-2.5 py-1.5 font-mono text-[10.5px] tracking-[0.08em] text-muted backdrop-blur-[8px]"
-          aria-hidden="true"
-        >
-          <span class="h-1.5 w-1.5 bg-orange"></span>
-          <span data-i18n="avatar.hint" class="shrink-0 whitespace-nowrap">{t("avatar.hint")}</span>
-        </div>
       </div>
     </div>
   </div>
