@@ -1,0 +1,29 @@
+---
+import { t } from "../../i18n";
+
+const paragraphKeys = ["about.p1", "about.p2", "about.p3"];
+---
+
+<section id="about" class="relative z-[1] mx-auto max-w-[1140px] px-6 pb-26">
+  <div data-reveal class="grid gap-6.5 min-[1000px]:grid-cols-[1fr_2fr] min-[1000px]:gap-14">
+    <div>
+      <p class="mb-2.5 font-mono text-xs tracking-[0.16em] text-teal">
+        04 / <span data-i18n="section.about.kicker">{t("section.about.kicker")}</span>
+      </p>
+      <h2
+        data-i18n="section.about.title"
+        class="m-0 text-[clamp(30px,3.6vw,42px)] font-extrabold tracking-[-0.03em]"
+      >
+        {t("section.about.title")}
+      </h2>
+    </div>
+
+    <div class="flex max-w-[70ch] flex-col gap-5.5 text-[15.5px] leading-[1.78] text-muted">
+      {
+        paragraphKeys.map((key) => (
+          <p data-i18n={key} class="rich-text m-0 text-pretty" set:html={t(key)}></p>
+        ))
+      }
+    </div>
+  </div>
+</section>

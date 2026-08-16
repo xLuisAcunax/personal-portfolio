@@ -1,0 +1,53 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { experienceKey, t } from "../../i18n";
+import Tag from "../ui/Tag.astro";
+
+interface Props {
+  entry: CollectionEntry<"experience">;
+  /** The current role gets the accent marker and accent date. */
+  current?: boolean;
+}
+
+const { entry, current = false } = Astro.props;
+const { company, role, start, end, stack } = entry.data;
+const { Content } = await entry.render();
+
+const slug = entry.slug.toLowerCase();
+const roleKey = experienceKey.role(slug);
+const isPresent = !end || end === "present";
+---
+
+<li data-job class="relative mb-11.5 list-none last:mb-0">
+  <span
+    class:list={[
+      "absolute top-[7px] -left-[34px] h-3 w-3 rounded-full border-2 bg-bg",
+      current ? "job-dot--current border-teal" : "border-line",
+    ]}
+    aria-hidden="true"></span>
+
+  <div class="mb-1.5 flex flex-wrap items-baseline justify-between gap-4">
+    <h3 class="m-0 text-[21px] font-extrabold tracking-[-0.02em]">{company}</h3>
+    <span class:list={["font-mono text-xs", current ? "text-teal" : "text-muted"]}>
+      {start} — {
+        isPresent ? <span data-i18n="experience.present">{t("experience.present")}</span> : end
+      }
+    </span>
+  </div>
+
+  <p data-i18n={roleKey} class="mb-3 text-[15px] font-semibold">{t(roleKey, role)}</p>
+
+  <div data-i18n={experienceKey.body(slug)} class="rich-text mb-3.5 text-[13.5px] text-muted">
+    <Content />
+  </div>
+
+  {
+    stack && stack.length > 0 && (
+      <div class="flex flex-wrap gap-1.5">
+        {stack.map((tech) => (
+          <Tag variant="square">{tech}</Tag>
+        ))}
+      </div>
+    )
+  }
+</li>

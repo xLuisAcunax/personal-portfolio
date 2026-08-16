@@ -1,0 +1,104 @@
+---
+import { NAV_ITEMS, SITE } from "../../config/site";
+import { LOCALES, t } from "../../i18n";
+
+/** Home-relative so the bar also works on nested routes. */
+const href = (hash: string) => `/${hash}`;
+---
+
+<nav
+  id="nav-pill"
+  aria-label="Primary"
+  class="fixed top-4 left-1/2 z-[100] flex max-w-[calc(100vw-24px)] animate-nav-drop items-center gap-1.5 rounded-full border border-line bg-surface/80 px-2.5 py-[7px] shadow-[0_10px_30px_rgba(0,0,0,.28)] backdrop-blur-[14px]"
+  style="transform: translateX(-50%);"
+>
+  <a href={href("#top")} data-magnet class="flex items-center gap-2 rounded-full px-2.5 py-1.5 text-fg">
+    <span class="brand-mark mr-1.5" aria-hidden="true"></span>
+    <span class="shrink-0 font-mono text-[11.5px] font-semibold tracking-[0.1em] whitespace-nowrap">
+      {SITE.brandMark}
+    </span>
+  </a>
+
+  <span class="mx-0.5 h-5 w-px bg-line" aria-hidden="true"></span>
+
+  <div class="flex items-center gap-0.5 max-[699px]:hidden">
+    {
+      NAV_ITEMS.map((item) => (
+        <a
+          href={href(item.href)}
+          data-magnet
+          data-i18n={item.labelKey}
+          class="nav-link rounded-full px-2.5 py-[7px] text-[12.5px] font-semibold text-muted"
+        >
+          {t(item.labelKey)}
+        </a>
+      ))
+    }
+  </div>
+
+  <span class="mx-0.5 h-5 w-px bg-line" aria-hidden="true"></span>
+
+  <div
+    class="flex items-center rounded-full border border-line p-0.5 font-mono"
+    role="group"
+    aria-label="Language"
+  >
+    {
+      LOCALES.map((locale) => (
+        <button
+          type="button"
+          data-lang-option={locale}
+          aria-pressed={locale === "en" ? "true" : "false"}
+          class="cursor-pointer rounded-full px-2 py-1 text-[10.5px] font-bold tracking-[0.06em] text-muted transition-colors aria-pressed:bg-teal aria-pressed:text-accent-contrast"
+        >
+          {locale.toUpperCase()}
+        </button>
+      ))
+    }
+  </div>
+
+  <button
+    type="button"
+    data-theme-toggle
+    data-magnet
+    aria-label="Toggle colour theme"
+    aria-pressed="false"
+    class="grid h-8 w-8 cursor-pointer place-items-center rounded-full border border-line text-fg"
+  >
+    <span
+      class="block h-3 w-3 rounded-full bg-yellow"
+      style="box-shadow: var(--theme-icon-shadow);"
+      aria-hidden="true"></span>
+  </button>
+
+  <button
+    type="button"
+    id="menu-toggle"
+    aria-label="Toggle menu"
+    aria-expanded="false"
+    aria-controls="mobile-menu"
+    class="hidden h-8 w-8 cursor-pointer place-items-center rounded-full border border-line text-fg max-[699px]:grid"
+  >
+    <span
+      class="block h-[1.5px] w-[13px] bg-current"
+      style="box-shadow: 0 -4.5px 0 currentColor, 0 4.5px 0 currentColor;"
+      aria-hidden="true"></span>
+  </button>
+</nav>
+
+<div
+  id="mobile-menu"
+  class="fixed top-[70px] right-3 left-3 z-[99] flex flex-col rounded-2xl border border-line bg-surface/95 p-2.5 shadow-[0_16px_40px_rgba(0,0,0,.34)] backdrop-blur-[14px] min-[700px]:hidden"
+>
+  {
+    NAV_ITEMS.map((item) => (
+      <a
+        href={href(item.href)}
+        data-i18n={item.labelKey}
+        class="nav-link rounded-[10px] px-3.5 py-3 text-[15px] font-semibold text-fg"
+      >
+        {t(item.labelKey)}
+      </a>
+    ))
+  }
+</div>

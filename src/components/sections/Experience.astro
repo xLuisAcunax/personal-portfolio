@@ -1,0 +1,44 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import ExperienceItem from "../experience/ExperienceItem.astro";
+import SectionHeading from "../ui/SectionHeading.astro";
+
+type Entry = CollectionEntry<"experience">;
+
+/** `present` sorts above every real date. */
+const sortKey = (entry: Entry): string =>
+  entry.data.end === "present" ? "9999-12" : (entry.data.end ?? entry.data.start);
+
+const roles = (await getCollection("experience")).sort((a, b) =>
+  sortKey(b).localeCompare(sortKey(a)),
+);
+---
+
+<section id="experience" class="relative z-[1] mx-auto max-w-[1140px] px-6 pb-26">
+  <SectionHeading
+    index="03"
+    kickerKey="section.experience.kicker"
+    titleKey="section.experience.title"
+    accent="orange"
+    class="mb-11"
+  />
+
+  <div class="relative pl-[34px]">
+    <div class="absolute top-1.5 bottom-1.5 left-[5px] w-0.5 bg-line" aria-hidden="true"></div>
+    <div
+      id="experience-spine"
+      class="absolute top-1.5 bottom-1.5 left-[5px] w-0.5"
+      style="background:linear-gradient(180deg,var(--c-teal),var(--c-yellow),var(--c-orange)); transform-origin:top center; transform:scaleY(0);"
+      aria-hidden="true"
+    >
+    </div>
+
+    <ol class="m-0 list-none p-0">
+      {
+        roles.map((entry) => (
+          <ExperienceItem entry={entry} current={entry.data.end === "present"} />
+        ))
+      }
+    </ol>
+  </div>
+</section>

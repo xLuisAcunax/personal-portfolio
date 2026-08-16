@@ -1,1 +1,440 @@
 @import "tailwindcss";
+
+/* ==========================================================================
+   Design tokens
+   Single source of truth for the palette. Runtime values live on :root so the
+   theme can be swapped by toggling `data-theme` on <html>; Tailwind reads them
+   through `@theme inline` so utilities such as `bg-surface` or `text-muted`
+   stay in sync with whatever theme is active.
+   ========================================================================== */
+
+@layer base {
+  :root {
+    color-scheme: dark;
+
+    --c-bg: #0b0f14;
+    --c-surface: #111820;
+    --c-surface-2: #0d131a;
+    --c-fg: #e9eef2;
+    --c-muted: #8b9aa6;
+    --c-line: rgba(255, 255, 255, 0.09);
+    --c-grid: rgba(255, 255, 255, 0.045);
+
+    /* Accents are theme independent. */
+    --c-teal: #2ec4a6;
+    --c-orange: #e2552f;
+    --c-yellow: #f0c14b;
+
+    /* Yellow that stays legible as text on the active surface. */
+    --c-yellow-ink: #f0c14b;
+
+    --blob-opacity: 1;
+    --avatar-plate: transparent;
+    --avatar-plate-border: transparent;
+    --avatar-plate-shadow: none;
+    --corner-plate: color-mix(in srgb, var(--c-surface) 82%, transparent);
+    --theme-icon-shadow: inset -4px 0 0 0 var(--c-surface);
+  }
+
+  :root[data-theme="light"] {
+    color-scheme: light;
+
+    --c-bg: #f5f6f4;
+    --c-surface: #ffffff;
+    --c-surface-2: #eef0ed;
+    --c-fg: #0d1319;
+    --c-muted: #5c6a73;
+    --c-line: rgba(13, 19, 25, 0.11);
+    --c-grid: rgba(13, 19, 25, 0.05);
+
+    --c-yellow-ink: #7a4f05;
+
+    --blob-opacity: 0.75;
+    /* The portrait is sampled from a dark photo, so it needs a dark plate to
+       stay readable on a light canvas. */
+    --avatar-plate: radial-gradient(circle at 50% 42%, #16202b, #0b1016 78%);
+    --avatar-plate-border: rgba(13, 19, 25, 0.14);
+    --avatar-plate-shadow: 0 20px 50px rgba(13, 19, 25, 0.16);
+    --corner-plate: #0d1319;
+    --theme-icon-shadow: none;
+  }
+}
+
+@theme inline {
+  --color-bg: var(--c-bg);
+  --color-surface: var(--c-surface);
+  --color-surface-2: var(--c-surface-2);
+  --color-fg: var(--c-fg);
+  --color-muted: var(--c-muted);
+  --color-line: var(--c-line);
+  --color-teal: var(--c-teal);
+  --color-orange: var(--c-orange);
+  --color-yellow: var(--c-yellow);
+  --color-yellow-ink: var(--c-yellow-ink);
+
+  /* Ink used on top of a solid accent fill. */
+  --color-accent-contrast: #06120f;
+
+  --font-sans: "Montserrat", system-ui, -apple-system, sans-serif;
+  --font-mono: "Google Sans Code", "Google Sans", ui-monospace, monospace;
+
+  --animate-marquee: marquee 34s linear infinite;
+  --animate-ping-slow: ping-slow 1.9s cubic-bezier(0, 0, 0.2, 1) infinite;
+  --animate-nav-drop: nav-drop 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
+  --animate-rise-in: rise-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-fade-up: fade-up 0.7s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes ping-slow {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  75%,
+  100% {
+    transform: scale(2.4);
+    opacity: 0;
+  }
+}
+
+@keyframes nav-drop {
+  from {
+    transform: translateX(-50%) translateY(-120%);
+  }
+  to {
+    transform: translateX(-50%) translateY(0);
+  }
+}
+
+@keyframes rise-in {
+  from {
+    transform: translateY(108%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes fade-up {
+  from {
+    transform: translateY(18px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   Base
+   Scoped to `html[data-theme]` so standalone pages that only need Tailwind
+   (for example the printable CV) keep their own light canvas.
+   ========================================================================== */
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  html[data-theme] body {
+    margin: 0;
+    background: var(--c-bg);
+    color: var(--c-fg);
+    font-family: var(--font-sans);
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    transition:
+      background 0.45s ease,
+      color 0.45s ease;
+  }
+
+  html[data-theme] ::selection {
+    background: color-mix(in srgb, var(--c-teal) 35%, transparent);
+  }
+
+  html[data-theme] :focus-visible {
+    outline: 2px solid var(--c-teal);
+    outline-offset: 2px;
+  }
+}
+
+/* ==========================================================================
+   Components
+   ========================================================================== */
+
+@layer components {
+  /* -- Rich text ---------------------------------------------------------
+     Markup authored in content collections and the translation dictionaries
+     stays plain HTML; presentation lives here. */
+  .rich-text ul {
+    margin: 0;
+    padding-left: 18px;
+    list-style: disc;
+  }
+
+  .rich-text li {
+    line-height: 1.8;
+  }
+
+  .rich-text strong {
+    color: var(--c-fg);
+    font-weight: 700;
+  }
+
+  .rich-text p {
+    margin: 0 0 1em;
+  }
+
+  .rich-text p:last-child {
+    margin-bottom: 0;
+  }
+
+  /* -- Scroll reveal -----------------------------------------------------
+     Content is visible by default; the hidden state only applies once the
+     bootstrap script has flagged the document, so the page reads fine with
+     JavaScript disabled or still loading. */
+  html[data-js] [data-reveal],
+  html[data-js] [data-tile],
+  html[data-js] [data-job] {
+    will-change: opacity, transform;
+  }
+
+  html[data-js] [data-reveal] {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+
+  html[data-js] [data-tile] {
+    opacity: 0;
+    transform: translateY(-70px) scale(0.85);
+  }
+
+  html[data-js] [data-job] {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+
+  html[data-js] [data-reveal].is-revealed,
+  html[data-js] [data-job].is-revealed {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.8s cubic-bezier(0.22, 0.61, 0.36, 1),
+      transform 0.8s cubic-bezier(0.22, 0.61, 0.36, 1);
+  }
+
+  html[data-js] [data-tile].is-revealed {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity 0.5s ease-out,
+      transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* -- Skill tiles ------------------------------------------------------- */
+  .skill-tile--teal {
+    box-shadow: 4px 4px 0 0 color-mix(in srgb, var(--c-teal) 22%, transparent);
+  }
+
+  .skill-tile--orange {
+    box-shadow: 4px 4px 0 0 color-mix(in srgb, var(--c-orange) 22%, transparent);
+  }
+
+  .skill-tile--yellow {
+    box-shadow: 4px 4px 0 0 color-mix(in srgb, var(--c-yellow) 22%, transparent);
+  }
+
+  .job-dot--current {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--c-teal) 15%, transparent);
+  }
+
+  .skill-tile i,
+  .skill-tile span {
+    transition:
+      color 0.25s ease,
+      transform 0.25s ease;
+  }
+
+  html[data-js] .skill-tile.is-revealed:hover,
+  .skill-tile:hover {
+    transform: translateY(-6px);
+  }
+
+  .skill-tile:hover i {
+    color: var(--c-teal);
+    transform: scale(1.16);
+  }
+
+  .skill-tile:hover span {
+    color: var(--c-fg);
+  }
+
+  /* -- Project cards ----------------------------------------------------- */
+  .tilt-card {
+    transform-style: preserve-3d;
+    transform: perspective(1000px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg));
+    transition:
+      transform 0.5s cubic-bezier(0.22, 0.61, 0.36, 1),
+      border-color 0.3s ease;
+  }
+
+  .tilt-card[data-tilt-active] {
+    border-color: color-mix(in srgb, var(--c-teal) 45%, transparent);
+  }
+
+  /* -- Custom pointer ---------------------------------------------------- */
+  .cursor-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+  }
+
+  .cursor-layer[data-visible="true"] {
+    opacity: 1;
+  }
+
+  .cursor-layer > span {
+    display: block;
+    transition:
+      transform 0.3s ease,
+      border-color 0.3s ease,
+      border-radius 0.3s ease;
+  }
+
+  #cursor-ring {
+    mix-blend-mode: difference;
+  }
+
+  #cursor-ring > span {
+    width: 26px;
+    height: 26px;
+    border: 1.5px solid var(--c-teal);
+    border-radius: 2px;
+  }
+
+  #cursor-ring[data-magnetised] > span {
+    transform: scale(2.1);
+    border-color: var(--c-orange);
+    border-radius: 50%;
+  }
+
+  #cursor-dot > span {
+    width: 5px;
+    height: 5px;
+    background: var(--c-orange);
+  }
+
+  /* -- Navigation -------------------------------------------------------- */
+  .nav-link {
+    transition:
+      color 0.25s ease,
+      background-color 0.25s ease;
+  }
+
+  .nav-link:hover {
+    color: var(--c-fg);
+    background: color-mix(in srgb, var(--c-fg) 7%, transparent);
+  }
+
+  .brand-mark {
+    display: block;
+    width: 9px;
+    height: 9px;
+    background: var(--c-teal);
+    box-shadow:
+      6px 0 0 var(--c-orange),
+      0 6px 0 var(--c-yellow),
+      6px 6px 0 var(--c-teal);
+  }
+
+  #mobile-menu {
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    visibility: hidden;
+    transition:
+      opacity 0.3s ease,
+      transform 0.3s ease,
+      visibility 0.3s;
+  }
+
+  #mobile-menu[data-open="true"] {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    visibility: visible;
+  }
+
+  /* -- Hero portrait ----------------------------------------------------- */
+  #hero-canvas {
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  #hero-canvas[data-ready] {
+    opacity: 1;
+  }
+
+  .avatar-plate {
+    background: var(--avatar-plate);
+    border: 1px solid var(--avatar-plate-border);
+    box-shadow: var(--avatar-plate-shadow);
+    transition:
+      background 0.45s ease,
+      border-color 0.45s ease;
+  }
+
+  .corner-plate {
+    background: var(--corner-plate);
+  }
+
+  /* -- Contact form ------------------------------------------------------ */
+  #contact-status[data-state="success"] {
+    color: var(--c-teal);
+  }
+
+  #contact-status[data-state="error"] {
+    color: var(--c-orange);
+  }
+}
+
+/* ==========================================================================
+   Motion preferences
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  html[data-js] [data-reveal],
+  html[data-js] [data-tile],
+  html[data-js] [data-job] {
+    opacity: 1;
+    transform: none;
+  }
+}

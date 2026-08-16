@@ -1,0 +1,67 @@
+---
+import { t } from "../../i18n";
+
+type Accent = "teal" | "yellow" | "orange";
+
+interface Props {
+  /** Two-digit section number shown before the kicker, e.g. "01". */
+  index: string;
+  kickerKey: string;
+  titleKey: string;
+  subtitleKey?: string;
+  accent?: Accent;
+  align?: "start" | "center";
+  class?: string;
+}
+
+const {
+  index,
+  kickerKey,
+  titleKey,
+  subtitleKey,
+  accent = "teal",
+  align = "start",
+  class: className = "",
+} = Astro.props;
+
+const ACCENT_TEXT: Record<Accent, string> = {
+  teal: "text-teal",
+  yellow: "text-yellow",
+  orange: "text-orange",
+};
+---
+
+<div
+  data-reveal
+  class:list={[
+    "mb-10",
+    align === "center" ? "text-center" : "flex flex-wrap items-end justify-between gap-6",
+    className,
+  ]}
+>
+  <div>
+    <p class:list={["mb-2.5 font-mono text-xs tracking-[0.16em]", ACCENT_TEXT[accent]]}>
+      {index} / <span data-i18n={kickerKey}>{t(kickerKey)}</span>
+    </p>
+    <h2
+      data-i18n={titleKey}
+      class="m-0 text-[clamp(32px,4.4vw,52px)] font-extrabold tracking-[-0.03em]"
+    >
+      {t(titleKey)}
+    </h2>
+  </div>
+
+  {
+    subtitleKey && (
+      <p
+        data-i18n={subtitleKey}
+        class:list={[
+          "m-0 text-sm leading-relaxed text-muted",
+          align === "center" ? "mx-auto mt-2.5 max-w-[46ch]" : "max-w-[34ch]",
+        ]}
+      >
+        {t(subtitleKey)}
+      </p>
+    )
+  }
+</div>

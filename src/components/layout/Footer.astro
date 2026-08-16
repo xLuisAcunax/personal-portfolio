@@ -1,0 +1,43 @@
+---
+import { SITE } from "../../config/site";
+import { t } from "../../i18n";
+import SocialIcon from "../ui/SocialIcon.astro";
+
+const year = new Date().getFullYear();
+
+const socials = [
+  { name: "github", label: "GitHub", href: SITE.github },
+  { name: "linkedin", label: "LinkedIn", href: SITE.linkedin },
+] as const;
+---
+
+<footer class="relative z-[1] border-t border-line bg-surface/55">
+  <div
+    class="mx-auto flex max-w-[1140px] flex-wrap items-center justify-between gap-6 px-6 py-8"
+  >
+    <div>
+      <p class="m-0 text-base font-extrabold tracking-[-0.02em]">{SITE.brand}</p>
+      <p data-i18n="footer.tagline" class="mt-1 font-mono text-[11.5px] text-muted">
+        {t("footer.tagline")}
+      </p>
+    </div>
+
+    <div class="flex items-center gap-4.5">
+      {
+        socials.map((social) => (
+          <a
+            href={social.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={social.label}
+            data-magnet
+            class="text-muted transition-colors hover:text-fg"
+          >
+            <SocialIcon name={social.name} size={19} />
+          </a>
+        ))
+      }
+      <span class="font-mono text-[11.5px] text-muted">by {SITE.brand} {year}.</span>
+    </div>
+  </div>
+</footer>

@@ -1,265 +1,150 @@
 ---
 import "../styles/global.css";
-import Footer from "../components/Footer.astro";
-import { SITE } from "../content/config.ts";
+import { SITE } from "../config/site";
+import Backdrop from "../components/layout/Backdrop.astro";
+import Footer from "../components/layout/Footer.astro";
+import NavBar from "../components/layout/NavBar.astro";
+import PointerCursor from "../components/layout/PointerCursor.astro";
+import ReadingProgress from "../components/layout/ReadingProgress.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string;
+}
 
 const {
-  title = "Luis — Portfolio",
-  description = "Software Developer",
-  keywords = "Software Engineer, .NET, Angular, Azure, Cloud Architect, Full Stack Developer, C#, TypeScript",
+  title = `${SITE.brand} — ${SITE.role}`,
+  description =
+    "Senior Full Stack Developer and Cloud Solutions Architect with 12+ years building scalable .NET, Angular and cloud-native systems.",
+  keywords =
+    "Software Engineer, .NET, Angular, Azure, Cloud Architect, Full Stack Developer, C#, TypeScript",
 } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const socialImage = new URL("/portfolio.png", Astro.site).href;
+
+const personSchema = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: SITE.brand,
+  image: new URL(SITE.avatar, Astro.site).href,
+  jobTitle: "Senior Software Engineer",
+  url: SITE.domain,
+  email: `mailto:${SITE.email}`,
+  worksFor: { "@type": "Organization", name: "GlobalLogic" },
+  address: {
+    "@type": "PostalAddress",
+    addressLocality: "Barranquilla",
+    addressCountry: "CO",
+  },
+  sameAs: [SITE.github, SITE.linkedin],
+  knowsAbout: [
+    "C#",
+    ".NET",
+    "Angular",
+    "Azure",
+    "Google Cloud",
+    "SQL Server",
+    "MongoDB",
+    "Node.js",
+    "TypeScript",
+    "Microservices",
+    "CI/CD",
+    "DevOps",
+  ],
+};
 ---
 
 <!doctype html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" data-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     <meta name="keywords" content={keywords} />
     <link rel="canonical" href={canonicalURL} />
+    <title>{title}</title>
 
-    <!-- OG -->
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:url" content={canonicalURL} />
-    <meta property="og:image" content="/background.svg" />
-
-    <!-- Twitter -->
+    <meta property="og:image" content={socialImage} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
-    <meta name="twitter:image" content="/background.svg" />
-    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="twitter:image" content={socialImage} />
+    <meta name="theme-color" content="#0b0f14" />
     <meta
       name="google-site-verification"
       content="VH-nhUqUBsA6xxoj_Gm-5JVXPK2NdypfYtO7g5Z305I"
     />
-    <link
-      rel="stylesheet"
-      type="text/css"
-      href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
-    />
-    <title>{title}</title>
+
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="shortcut icon" href="/favicon.ico" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
 
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PNH39ZJDM1"
-    ></script>
-    <script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300..900&family=Google+Sans+Code:wght@300..800&display=swap"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css"
+    />
+
+    {/* Applied before first paint so the stored theme never flashes. */}
+    <script is:inline>
+      (function () {
+        var root = document.documentElement;
+        root.dataset.js = "true";
+        var stored = null;
+        try {
+          stored = window.localStorage.getItem("la-theme");
+        } catch (error) {
+          /* storage unavailable */
+        }
+        root.dataset.theme =
+          stored === "light" || stored === "dark"
+            ? stored
+            : window.matchMedia("(prefers-color-scheme: light)").matches
+              ? "light"
+              : "dark";
+      })();
+    </script>
+
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-PNH39ZJDM1"></script>
+    <script is:inline>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
         dataLayer.push(arguments);
       }
       gtag("js", new Date());
-
       gtag("config", "G-PNH39ZJDM1");
     </script>
 
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "Person",
-        "name": "Luis Acuña",
-        "image": "https://luis-acuna.dev/about-me.jpg",
-        "jobTitle": "Senior Software Engineer",
-        "url": "https://luis-acuna.dev",
-        "email": "mailto:ldacuna83@gmail.com",
-        "worksFor": {
-          "@type": "Organization",
-          "name": "GlobalLogic"
-        },
-        "address": {
-          "@type": "PostalAddress",
-          "addressLocality": "Barranquilla",
-          "addressCountry": "CO"
-        },
-        "sameAs": [
-          "https://github.com/xLuisAcunax",
-          "https://www.linkedin.com/in/ldacuna83/"
-        ],
-        "knowsAbout": [
-          "C#",
-          ".NET",
-          "Angular",
-          "Azure",
-          "Google Cloud",
-          "SQL Server",
-          "MongoDB",
-          "Node.js",
-          "TypeScript",
-          "Microservices",
-          "CI/CD",
-          "DevOps"
-        ]
-      }
-    </script>
+    <script type="application/ld+json" set:html={JSON.stringify(personSchema)}></script>
   </head>
-  <body class="min-h-dvh text-neutral-100 antialiased selection:bg-blue-500/30">
-    <!-- Fixed Background Gradient -->
-    <div class="fixed inset-0 -z-10 h-full w-full bg-neutral-950">
-      <div
-        class="absolute top-0 z-[-2] h-screen w-screen bg-neutral-950 bg-[radial-gradient(ellipse_80%_80%_at_50%_-20%,rgba(120,119,198,0.3),rgba(255,255,255,0))]"
-      >
-      </div>
-      <div
-        class="absolute bottom-0 left-0 z-[-2] h-[500px] w-[500px] rounded-full bg-blue-900/20 blur-[100px]"
-      >
-      </div>
-      <div
-        class="absolute top-1/2 right-0 z-[-2] h-[500px] w-[500px] rounded-full bg-purple-900/20 blur-[100px]"
-      >
-      </div>
-    </div>
-    <header
-      class="fixed inset-x-0 top-0 z-50
-            h-14 sm:h-[var(--header-h)]
-            flex items-center px-6 transition
-            data-[scrolled=true]:backdrop-blur-md data-[scrolled=true]:bg-neutral-950/50"
-    >
-      <div
-        class="mx-auto max-w-5xl w-full flex items-center justify-between gap-3"
-      >
-        <!-- BRAND: evita salto en el guion -->
-        <a href="/" class="group flex items-center gap-2">
-          <div class="relative overflow-hidden">
-            <img
-              src="/logo.png"
-              alt="Luis Acuña"
-              class="h-8 w-auto relative z-10 transition-transform duration-500"
-            />
-            <!-- Continuous Shine effect -->
-            <div
-              class="absolute top-0 -left-[150%] w-[200%] h-full bg-gradient-to-r from-transparent via-white/60 to-transparent -skew-x-25 animate-shine-infinite z-20 pointer-events-none"
-            >
-            </div>
-          </div>
-          <span
-            class="text-sm font-semibold tracking-wide transition-all duration-300 group-hover:text-blue-400 group-hover:drop-shadow-[0_0_10px_rgba(59,130,246,0.6)]"
-          >
-            LUIS-ACUNA.DEV
-          </span>
-        </a>
 
-        <!-- NAV DESKTOP -->
-        <nav class="hidden sm:flex gap-6 text-sm">
-          <a href="#experience" class="opacity-80 hover:text-yellow-200"
-            >Experience</a
-          >
-          <a href="#projects"   class="opacity-80 hover:text-yellow-200">Projects</a>
-          <a href="#contact" class="opacity-80 hover:text-yellow-200">Contact</a
-          >
-          <a href="/cv" class="opacity-80 hover:text-yellow-200" target="_blank"
-            >CV</a
-          >
-        </nav>
+  <body class="relative min-h-dvh overflow-x-hidden">
+    <Backdrop />
+    <ReadingProgress />
+    <PointerCursor />
+    <NavBar />
 
-        <!-- HAMBURGUESA (solo móvil) -->
-        <button
-          id="menuBtn"
-          class="sm:hidden inline-flex items-center justify-center rounded-md border border-neutral-800 px-3 py-2 text-sm"
-          aria-label="Abrir menú"
-          aria-expanded="false"
-        >
-          ☰
-        </button>
-      </div>
-
-      <!-- MENÚ MÓVIL -->
-      <div
-        id="mobileMenu"
-        class="sm:hidden fixed inset-x-0 top-14
-                  bg-neutral-950/95 border-t border-neutral-800
-                  opacity-0 -translate-y-2 pointer-events-none transition
-                  data-[open=true]:opacity-100 data-[open=true]:translate-y-0 data-[open=true]:pointer-events-auto"
-      >
-        <nav class="mx-auto max-w-5xl px-6 py-3 grid gap-2 text-base">
-          <a href="#experience" class="py-2 opacity-90 hover:text-yellow-200"
-            >Experience</a
-          >
-          <a href="#projects" class="py-2 opacity-90 hover:text-yellow-200"
-            >Projects</a
-          >
-          <a href="#contact" class="py-2 opacity-90 hover:text-yellow-200"
-            >Contact</a
-          >
-          <a href="/cv" class="py-2 opacity-90 hover:text-yellow-200">CV</a>
-        </nav>
-      </div>
-    </header>
-
-    <main class="pt-14 sm:pt-[var(--header-h)]">
+    <main class="relative z-[1]">
       <slot />
     </main>
 
-    <!-- Footer -->
-    <Footer
-      brand={SITE.brand}
-      tagline={SITE.tagline}
-      githubUrl={SITE.github}
-      linkedinUrl={SITE.linkedin}
-      nav={SITE.nav}
-    />
+    <Footer />
 
-    <script type="module">
-      // Cambia estilos del header al hacer scroll (sin librerías)
-      const header = document.querySelector("header");
-      const onScroll = () =>
-        header?.setAttribute("data-scrolled", window.scrollY > 10);
-      onScroll();
-      addEventListener("scroll", onScroll, { passive: true });
-
-      const btn = document.getElementById("menuBtn");
-      const menu = document.getElementById("mobileMenu");
-      btn?.addEventListener("click", () => {
-        const open = menu.getAttribute("data-open") === "true";
-        menu.setAttribute("data-open", String(!open));
-        btn.setAttribute("aria-expanded", String(!open));
-      });
-      menu?.addEventListener("click", (e) => {
-        const a = e.target.closest("a");
-        if (!a) return;
-        menu.setAttribute("data-open", "false");
-        btn.setAttribute("aria-expanded", "false");
-      });
+    <script>
+      import "../scripts/main";
     </script>
   </body>
 </html>
-
-<style>
-  :root {
-    --header-h: 72px;
-  }
-  html,
-  body {
-    margin: 0;
-    width: 100%;
-    height: 100%;
-  }
-
-  /* Continuous Shine Animation */
-  @keyframes shine-infinite {
-    0% {
-      left: -150%;
-      opacity: 0;
-    }
-    15% {
-      left: 150%;
-      opacity: 0.8;
-    } /* Fast shine pass */
-    100% {
-      left: 150%;
-      opacity: 0;
-    } /* Long pause */
-  }
-  .animate-shine-infinite {
-    animation: shine-infinite 4s infinite ease-in-out;
-  }
-</style>

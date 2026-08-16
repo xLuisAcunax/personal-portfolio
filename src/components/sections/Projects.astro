@@ -1,0 +1,38 @@
+---
+import { getCollection } from "astro:content";
+import ProjectCard from "../projects/ProjectCard.astro";
+import type { ProjectBadge } from "../../types/project";
+import SectionHeading from "../ui/SectionHeading.astro";
+
+/**
+ * Ordered by file name so the running order is authored in the content folder
+ * (`01-`, `02-`, …) rather than inferred from a date.
+ */
+const projects = (await getCollection("projects")).sort((a, b) => a.id.localeCompare(b.id));
+
+const badgeFor = (entry: (typeof projects)[number], index: number): ProjectBadge =>
+  entry.data.badge ?? (index === 0 ? "featured" : "open-source");
+---
+
+<section id="projects" class="relative z-[1] mx-auto max-w-[1140px] px-6 py-26">
+  <SectionHeading
+    index="01"
+    kickerKey="section.projects.kicker"
+    titleKey="section.projects.title"
+    subtitleKey="section.projects.subtitle"
+    accent="teal"
+  />
+
+  <div class="flex flex-col gap-5.5">
+    {
+      projects.map((entry, index) => (
+        <ProjectCard
+          entry={entry}
+          badge={badgeFor(entry, index)}
+          reverse={index % 2 === 1}
+          lead={index === 0}
+        />
+      ))
+    }
+  </div>
+</section>

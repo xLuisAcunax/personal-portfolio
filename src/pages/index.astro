@@ -1,28 +1,21 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Hero from "../components/Hero.astro";
-import Projects from "../components/Projects.astro";
-import Skills from "../components/Skills.astro";
-import Experience from "../components/Experience.astro";
-import About from "../components/About.astro";
-import ContactForm from "../components/ContactForm.astro";
+import About from "../components/sections/About.astro";
+import Contact from "../components/sections/Contact.astro";
+import Experience from "../components/sections/Experience.astro";
+import Hero from "../components/sections/Hero.astro";
+import Marquee from "../components/sections/Marquee.astro";
+import Projects from "../components/sections/Projects.astro";
+import Skills from "../components/sections/Skills.astro";
+import { SITE } from "../config/site";
 ---
 
-<Layout title="Luis Acuña — Senior Full Stack Developer">
-  <main class="min-h-screen">
-    <Hero />
-    <Projects />
-    <Skills />
-    <Experience />
-    <About />
-
-    <section id="contact" class="py-20 border-t border-white/10">
-      <div class="max-w-xl mx-auto px-6">
-        <h2 class="text-3xl font-bold mb-8 text-white text-center">
-          Get In Touch
-        </h2>
-        <ContactForm />
-      </div>
-    </section>
-  </main>
+<Layout title={`${SITE.brand} — ${SITE.role} & ${SITE.secondaryRole}`}>
+  <Hero />
+  <Marquee />
+  <Projects />
+  <Skills />
+  <Experience />
+  <About />
+  <Contact />
 </Layout>

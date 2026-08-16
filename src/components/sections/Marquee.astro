@@ -1,0 +1,27 @@
+---
+import { MARQUEE_ITEMS } from "../../config/site";
+
+const ACCENTS = ["text-teal", "text-orange", "text-yellow"];
+/** Duplicated once so the -50% keyframe loops seamlessly. */
+const TRACKS = [false, true];
+---
+
+<div
+  class="relative z-[1] mt-14 overflow-hidden border-y border-line bg-surface/45 py-4"
+  aria-hidden="true"
+>
+  <div class="flex w-max animate-marquee will-change-transform">
+    {
+      TRACKS.map(() => (
+        <div class="flex items-center gap-8 pr-8 font-mono text-[13px] tracking-[0.14em] whitespace-nowrap text-muted">
+          {MARQUEE_ITEMS.map((item, index) => (
+            <Fragment>
+              <span>{item}</span>
+              <span class={ACCENTS[index % ACCENTS.length]}>◆</span>
+            </Fragment>
+          ))}
+        </div>
+      ))
+    }
+  </div>
+</div>

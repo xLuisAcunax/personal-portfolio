@@ -1,0 +1,199 @@
+---
+import { getCollection } from "astro:content";
+import { SITE } from "../../config/site";
+import { SKILLS } from "../../config/skills";
+import { t } from "../../i18n";
+import SocialIcon from "../ui/SocialIcon.astro";
+
+const experience = await getCollection("experience");
+
+/** Stats are derived from real data so they cannot drift out of date. */
+const stats = [
+  { value: SITE.yearsOfExperience, suffix: "+", labelKey: "stat.years", accent: "text-teal" },
+  { value: experience.length, suffix: "", labelKey: "stat.companies", accent: "text-yellow" },
+  { value: SKILLS.length, suffix: "", labelKey: "stat.tech", accent: "text-orange" },
+];
+
+const actions = [
+  {
+    href: SITE.linkedin,
+    icon: "linkedin",
+    label: "LinkedIn",
+    class: "bg-teal text-accent-contrast",
+  },
+  {
+    href: SITE.github,
+    icon: "github",
+    label: "GitHub",
+    class: "border border-line bg-surface/60 text-fg",
+  },
+] as const;
+---
+
+<section
+  id="top"
+  class="relative z-[1] mx-auto max-w-[1140px] px-[18px] pt-[120px] pb-8 min-[700px]:px-6 min-[700px]:pt-[150px] min-[700px]:pb-10"
+>
+  <div class="grid items-center gap-9 min-[1000px]:grid-cols-[1.15fr_0.85fr] min-[1000px]:gap-14">
+    <div>
+      <p
+        class="mb-6 inline-flex animate-fade-up items-center gap-2.5 rounded-full border border-teal/40 bg-teal/10 px-3.5 py-1.5"
+      >
+        <span class="relative flex h-[7px] w-[7px]" aria-hidden="true">
+          <span class="absolute inset-0 animate-ping-slow rounded-full bg-teal"></span>
+          <span class="relative h-[7px] w-[7px] rounded-full bg-teal"></span>
+        </span>
+        <span
+          data-i18n="hero.status"
+          class="font-mono text-[11.5px] font-semibold tracking-[0.08em] text-teal uppercase"
+        >
+          {t("hero.status")}
+        </span>
+      </p>
+
+      <p
+        data-i18n="hero.kicker"
+        class="mb-3.5 animate-fade-up font-mono text-[12.5px] tracking-[0.14em] text-muted"
+        style="animation-delay:.06s"
+      >
+        {t("hero.kicker")}
+      </p>
+
+      <h1
+        class="m-0 mb-4.5 text-[clamp(46px,7.4vw,92px)] leading-[0.94] font-black tracking-[-0.035em]"
+      >
+        <span class="inline-block animate-rise-in" style="animation-delay:.1s">Luis</span>
+        <span class="inline-block animate-rise-in text-orange" style="animation-delay:.19s">
+          Acuña
+        </span>
+      </h1>
+
+      <p
+        class="m-0 mb-6.5 max-w-[19ch] animate-fade-up text-[clamp(19px,2.3vw,29px)] leading-[1.28] font-semibold"
+        style="animation-delay:.35s"
+      >
+        <span data-i18n="hero.role.primary">{t("hero.role.primary")}</span>
+        <span class="text-muted"> &amp; </span>
+        <span data-i18n="hero.role.secondary" class="text-teal">{t("hero.role.secondary")}</span>
+      </p>
+
+      <p
+        data-i18n="hero.bio"
+        class="rich-text m-0 mb-8.5 max-w-[58ch] animate-fade-up text-[16.5px] leading-[1.72] text-pretty text-muted"
+        style="animation-delay:.42s"
+        set:html={t("hero.bio")}
+      ></p>
+
+      <div class="mb-11 flex animate-fade-up flex-wrap gap-3" style="animation-delay:.5s">
+        {
+          actions.map((action) => (
+            <a
+              href={action.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-magnet
+              class:list={[
+                "inline-flex items-center gap-2.5 rounded-[10px] px-5 py-3 text-sm font-bold",
+                action.class,
+              ]}
+            >
+              <SocialIcon name={action.icon} />
+              <span>{action.label}</span>
+            </a>
+          ))
+        }
+        <a
+          href={SITE.cvPath}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-magnet
+          class="inline-flex items-center gap-2.5 rounded-[10px] border border-yellow/50 bg-yellow/10 px-5 py-3 text-sm font-bold whitespace-nowrap text-yellow-ink"
+        >
+          <SocialIcon name="download" />
+          <span data-i18n="hero.cv">{t("hero.cv")}</span>
+        </a>
+      </div>
+
+      <div id="stats" class="grid max-w-[520px] grid-cols-3 gap-3.5">
+        {
+          stats.map((stat) => (
+            <div class="rounded-xl border border-line bg-surface/55 px-4.5 py-4">
+              <p
+                class:list={[
+                  "m-0 font-mono text-[34px] font-bold tracking-[-0.03em]",
+                  stat.accent,
+                ]}
+              >
+                <span data-count={stat.value}>{stat.value}</span>
+                {stat.suffix}
+              </p>
+              <p
+                data-i18n={stat.labelKey}
+                class="mt-1 text-[11px] font-semibold tracking-[0.1em] text-muted uppercase"
+              >
+                {t(stat.labelKey)}
+              </p>
+            </div>
+          ))
+        }
+      </div>
+    </div>
+
+    <div class="relative flex justify-center max-[999px]:order-first">
+      <div data-avatar-stage class="relative aspect-square w-[min(380px,78vw)]">
+        <div
+          id="avatar-glow"
+          class="absolute inset-[8%] rounded-full blur-[22px]"
+          style="background:radial-gradient(circle, rgba(46,196,166,.34), rgba(226,85,47,.16) 58%, transparent 72%);"
+          aria-hidden="true"
+        >
+        </div>
+
+        <div class="avatar-plate absolute inset-0 rounded-[26px]" aria-hidden="true"></div>
+
+        <img
+          id="avatar-fallback"
+          src={SITE.avatar}
+          alt={`Portrait of ${SITE.brand}`}
+          width="380"
+          height="380"
+          class="absolute inset-0 h-full w-full rounded-[26px] object-cover"
+        />
+
+        <canvas
+          id="hero-canvas"
+          width="700"
+          height="700"
+          role="img"
+          aria-label={`Pixel-art portrait of ${SITE.brand}`}
+          class="relative block h-full w-full [image-rendering:pixelated]"></canvas>
+
+        <div
+          id="avatar-hint"
+          class="absolute bottom-[2%] left-[2%] flex items-center gap-2 rounded-lg border border-line bg-surface/85 px-2.5 py-1.5 font-mono text-[10.5px] tracking-[0.08em] text-muted backdrop-blur-[8px]"
+          aria-hidden="true"
+        >
+          <span class="h-1.5 w-1.5 bg-orange"></span>
+          <span data-i18n="avatar.hint" class="shrink-0 whitespace-nowrap">{t("avatar.hint")}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div
+  id="corner-avatar"
+  aria-hidden="true"
+  class="pointer-events-none fixed right-3 bottom-3 z-[90] min-[700px]:right-5 min-[700px]:bottom-5"
+  style="opacity:0; transform:translateY(14px);"
+>
+  <div
+    class="corner-plate relative rounded-[14px] border border-line p-2 shadow-[0_12px_34px_rgba(0,0,0,.35)] backdrop-blur-[12px]"
+  >
+    <canvas
+      id="corner-canvas"
+      width="128"
+      height="128"
+      class="block h-16 w-16 [image-rendering:pixelated]"></canvas>
+  </div>
+</div>

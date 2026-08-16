@@ -1,0 +1,106 @@
+---
+import { t } from "../../i18n";
+import SocialIcon from "../ui/SocialIcon.astro";
+
+const fields = [
+  {
+    id: "name",
+    type: "text",
+    labelKey: "form.name",
+    placeholderKey: "form.placeholder.name",
+    autocomplete: "name",
+    minlength: 2,
+  },
+  {
+    id: "email",
+    type: "email",
+    labelKey: "form.email",
+    placeholderKey: "form.placeholder.email",
+    autocomplete: "email",
+  },
+] as const;
+
+const inputClass =
+  "w-full rounded-[10px] border border-line bg-surface-2 px-3.5 py-3 text-[14.5px] text-fg placeholder:text-muted/70";
+const labelClass =
+  "font-mono text-[11px] font-semibold tracking-[0.1em] text-muted uppercase";
+---
+
+<section id="contact" class="relative z-[1] mx-auto max-w-[640px] px-6 pb-28">
+  <div data-reveal class="mb-8.5 text-center">
+    <p class="mb-2.5 font-mono text-xs tracking-[0.16em] text-orange">
+      05 / <span data-i18n="section.contact.kicker">{t("section.contact.kicker")}</span>
+    </p>
+    <h2
+      data-i18n="section.contact.title"
+      class="m-0 mb-2.5 text-[clamp(30px,3.8vw,46px)] font-extrabold tracking-[-0.03em]"
+    >
+      {t("section.contact.title")}
+    </h2>
+    <p data-i18n="section.contact.subtitle" class="m-0 text-[14.5px] text-muted">
+      {t("section.contact.subtitle")}
+    </p>
+  </div>
+
+  <form
+    data-reveal
+    id="contact-form"
+    name="contact"
+    method="POST"
+    data-netlify="true"
+    netlify-honeypot="bot-field"
+    class="flex flex-col gap-4 rounded-[18px] border border-line bg-surface/70 p-7"
+  >
+    <input type="hidden" name="form-name" value="contact" />
+    <p class="hidden">
+      <label>Don't fill this out if you're human: <input name="bot-field" tabindex="-1" /></label>
+    </p>
+
+    {
+      fields.map((field) => (
+        <div class="flex flex-col gap-[7px]">
+          <label for={field.id} data-i18n={field.labelKey} class={labelClass}>
+            {t(field.labelKey)}
+          </label>
+          <input
+            id={field.id}
+            name={field.id}
+            type={field.type}
+            required
+            minlength={"minlength" in field ? field.minlength : undefined}
+            autocomplete={field.autocomplete}
+            placeholder={t(field.placeholderKey)}
+            data-i18n-placeholder={field.placeholderKey}
+            class={inputClass}
+          />
+        </div>
+      ))
+    }
+
+    <div class="flex flex-col gap-[7px]">
+      <label for="message" data-i18n="form.message" class={labelClass}>{t("form.message")}</label>
+      <textarea
+        id="message"
+        name="message"
+        required
+        minlength="10"
+        rows="5"
+        placeholder={t("form.placeholder.message")}
+        data-i18n-placeholder="form.placeholder.message"
+        class={`${inputClass} resize-y`}></textarea>
+    </div>
+
+    <div class="flex items-center justify-between gap-4 pt-1.5">
+      <button
+        type="submit"
+        id="contact-submit"
+        data-magnet
+        class="inline-flex cursor-pointer items-center gap-2.5 rounded-[10px] bg-teal px-5.5 py-3 text-sm font-bold text-accent-contrast disabled:cursor-not-allowed disabled:opacity-60"
+      >
+        <span data-submit-label data-i18n="form.send">{t("form.send")}</span>
+        <SocialIcon name="send" size={14} />
+      </button>
+      <span id="contact-status" class="text-[13px] text-muted" aria-live="polite"></span>
+    </div>
+  </form>
+</section>

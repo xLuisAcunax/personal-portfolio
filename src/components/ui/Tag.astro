@@ -1,0 +1,17 @@
+---
+interface Props {
+  /** `pill` for project stacks, `square` for the denser timeline stacks. */
+  variant?: "pill" | "square";
+}
+
+const { variant = "pill" } = Astro.props;
+---
+
+<span
+  class:list={[
+    "border border-line text-muted",
+    variant === "pill" ? "rounded-full px-2.5 py-[5px] text-[11px]" : "rounded px-2.5 py-1 text-[10.5px]",
+  ]}
+>
+  <slot />
+</span>

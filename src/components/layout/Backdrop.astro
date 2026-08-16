@@ -1,0 +1,25 @@
+---
+/** Fixed ambient layers: a faint grid and two blurred accent blobs. */
+---
+
+<div class="pointer-events-none fixed inset-0 z-0" aria-hidden="true">
+  <div
+    class="absolute inset-0"
+    style="background-image:linear-gradient(var(--c-grid) 1px, transparent 1px), linear-gradient(90deg, var(--c-grid) 1px, transparent 1px); background-size:44px 44px;"
+  >
+  </div>
+
+  <div
+    data-parallax="140"
+    class="absolute -top-[18vh] -right-[12vw] h-[52vw] w-[52vw] rounded-full blur-[30px]"
+    style="background:radial-gradient(circle, rgba(46,196,166,.20), transparent 66%); opacity:var(--blob-opacity);"
+  >
+  </div>
+
+  <div
+    data-parallax="-120"
+    class="absolute -bottom-[22vh] -left-[14vw] h-[48vw] w-[48vw] rounded-full blur-[30px]"
+    style="background:radial-gradient(circle, rgba(226,85,47,.16), transparent 66%); opacity:var(--blob-opacity);"
+  >
+  </div>
+</div>

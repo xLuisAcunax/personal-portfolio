@@ -1,0 +1,149 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { projectKey, t } from "../../i18n";
+import type { ProjectBadge } from "../../types/project";
+import Tag from "../ui/Tag.astro";
+
+interface Props {
+  entry: CollectionEntry<"projects">;
+  badge: ProjectBadge;
+  /** Puts the artwork on the right at desktop widths. */
+  reverse?: boolean;
+  /** The lead card gets slightly larger type and artwork. */
+  lead?: boolean;
+}
+
+const { entry, badge, reverse = false, lead = false } = Astro.props;
+const { title, summary, stack, year, cover, link, repo } = entry.data;
+const { Content } = await entry.render();
+
+const slug = entry.slug.toLowerCase();
+const badgeKey = `project.badge.${badge}`;
+
+const badgeClass =
+  badge === "featured"
+    ? "bg-orange text-white"
+    : "border border-line text-teal";
+---
+
+{/* The reveal transform lives on the wrapper so it never fights the tilt. */}
+<div data-reveal>
+  <article
+    data-tilt
+    class:list={[
+      "tilt-card relative grid overflow-hidden rounded-[20px] border border-line bg-surface/70",
+      reverse ? "min-[1000px]:grid-cols-[1fr_1.1fr]" : "min-[1000px]:grid-cols-[1.1fr_1fr]",
+    ]}
+  >
+    <div
+      class:list={[
+        "relative overflow-hidden bg-surface-2",
+        lead ? "min-h-[210px] min-[1000px]:min-h-[340px]" : "min-h-[210px] min-[1000px]:min-h-[300px]",
+        reverse && "min-[1000px]:order-2",
+      ]}
+    >
+      {
+        cover && (
+          <img
+            data-tilt-image
+            src={cover}
+            alt={title}
+            loading="lazy"
+            decoding="async"
+            class:list={[
+              "absolute -top-[6%] left-0 h-[112%] w-full object-cover will-change-transform",
+              reverse ? "[object-position:top_center]" : "[object-position:left_top]",
+            ]}
+          />
+        )
+      }
+      <div
+        class="absolute inset-0"
+        style={`background:linear-gradient(${reverse ? "240deg" : "120deg"}, transparent ${reverse ? "45%" : "40%"}, color-mix(in srgb, var(--c-surface) ${reverse ? "75%" : "80%"}, transparent));`}
+        aria-hidden="true"
+      >
+      </div>
+    </div>
+
+    <div
+      class:list={[
+        "flex flex-col p-[26px_22px]",
+        lead ? "min-[700px]:px-9 min-[700px]:py-9.5" : "min-[700px]:px-8 min-[700px]:py-8.5",
+        reverse && "min-[1000px]:order-1",
+      ]}
+    >
+      <div class="mb-4 flex items-center gap-2.5">
+        <span
+          data-i18n={badgeKey}
+          class:list={[
+            "rounded-[5px] px-2.5 py-1 font-mono text-[9.5px] font-bold tracking-[0.12em]",
+            badgeClass,
+          ]}
+        >
+          {t(badgeKey)}
+        </span>
+        {
+          year && (
+            <span class="font-mono text-[11px] tracking-[0.12em] text-muted">{year}</span>
+          )
+        }
+      </div>
+
+      <h3
+        class:list={[
+          "m-0 mb-3.5 font-extrabold tracking-[-0.03em]",
+          lead ? "text-[34px]" : "text-[28px]",
+        ]}
+      >
+        {title}
+      </h3>
+
+      <p
+        data-i18n={projectKey.summary(slug)}
+        class:list={["m-0 mb-4.5 leading-[1.7] text-muted", lead ? "text-[15px]" : "text-[14.5px]"]}
+      >
+        {summary}
+      </p>
+
+      <div
+        data-i18n={projectKey.body(slug)}
+        class:list={["rich-text mb-6 text-muted", lead ? "text-[13.5px]" : "text-[13px]"]}
+      >
+        <Content />
+      </div>
+
+      <div class="mb-6 flex flex-wrap gap-[7px]">
+        {stack.map((tech) => <Tag>{tech}</Tag>)}
+      </div>
+
+      <div class="mt-auto flex flex-wrap gap-5 border-t border-line pt-5 whitespace-nowrap">
+        {
+          link && (
+            <a
+              href={link}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-magnet
+              class="text-[13.5px] font-bold text-teal"
+            >
+              <span data-i18n="project.visit">{t("project.visit")}</span> →
+            </a>
+          )
+        }
+        {
+          repo && (
+            <a
+              href={repo}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-magnet
+              class="text-[13.5px] font-bold text-muted transition-colors hover:text-fg"
+            >
+              <span data-i18n="project.code">{t("project.code")}</span>
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </article>
+</div>

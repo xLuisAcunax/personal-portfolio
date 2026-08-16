@@ -1,0 +1,40 @@
+---
+import { SKILLS, skillAccent, type SkillAccent } from "../../config/skills";
+import SectionHeading from "../ui/SectionHeading.astro";
+
+/** Static class map — the offset shadows live in global.css. */
+const ACCENT_CLASS: Record<SkillAccent, string> = {
+  teal: "skill-tile--teal",
+  orange: "skill-tile--orange",
+  yellow: "skill-tile--yellow",
+};
+---
+
+<section id="skills" class="relative z-[1] mx-auto max-w-[1140px] px-6 pt-15 pb-26">
+  <SectionHeading
+    index="02"
+    kickerKey="section.skills.kicker"
+    titleKey="section.skills.title"
+    accent="yellow"
+  />
+
+  <ul
+    id="skill-wall"
+    class="m-0 grid list-none grid-cols-2 gap-3 p-0 min-[700px]:grid-cols-3 min-[1000px]:grid-cols-5"
+  >
+    {
+      SKILLS.map((skill, index) => (
+        <li
+          data-tile
+          class:list={[
+            "skill-tile relative flex flex-col items-center gap-2.5 rounded border border-line bg-surface/70 px-3.5 py-6",
+            ACCENT_CLASS[skillAccent(index)],
+          ]}
+        >
+          <i class={`${skill.icon} text-[34px] text-muted`} aria-hidden="true"></i>
+          <span class="text-center text-xs font-semibold text-muted">{skill.name}</span>
+        </li>
+      ))
+    }
+  </ul>
+</section>
